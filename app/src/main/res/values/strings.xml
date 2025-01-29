@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Tradely</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="explore_stocks">Explore Stocks</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="follow">Follow</string>
+    <string name="unfollow">Unfollow</string>
+</resources>

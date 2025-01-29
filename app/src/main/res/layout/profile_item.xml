@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profile_IMG_profile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_margin="8dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginStart="125dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile_IMG_profile"
+        app:layout_constraintTop_toTopOf="@id/profile_IMG_profile">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/profile_LBL_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:textSize="25sp"
+            android:textColor="@color/text_color"
+            tools:text="yarden" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/profile_LBL_net_worth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile_LBL_name"
+            android:layout_margin="4dp"
+            android:textColor="@color/text_color"
+            tools:text="Net Worth: 5$"
+            android:textStyle="bold"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/profile_LBL_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
+            android:layout_below="@id/profile_LBL_net_worth"
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="4dp"
+            android:maxLines="3"
+            android:minLines="1"
+            android:textSize="12sp"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse lacus massa, eleifend et nisl ut, interdum commodo justo. Mauris congue efficitur sem vitae ultricies. Fusce dictum eget orci quis tincidunt. Aliquam laoreet rhoncus " />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile_LBL_description">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/profile_IMG_change"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="7dp"
+
+                android:layout_alignParentStart="true"
+                app:srcCompat="@drawable/ic_arrow_up"
+                android:tint="@color/positive"
+               />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/profile_LBL_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/profile_IMG_change"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/positive"
+                tools:text = "1.75%"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="8dp"
+                app:srcCompat="@drawable/us"
+                android:layout_toEndOf="@id/profile_LBL_change" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/profile_RL_follow"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/profile_LBL_description"
+            android:layout_marginEnd="16dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/profile_LBL_follow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/profile_IMG_plus"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="4dp"
+                android:textColor="@color/text_color"
+                android:text = "@string/follow"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/profile_IMG_plus"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="7dp"
+                app:srcCompat="@android:drawable/ic_input_add"
+                android:tint="@color/text_color"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
