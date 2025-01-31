@@ -9,7 +9,7 @@ class App : Application() {
         super.onCreate()
         ProfileManager.init(this)
         //ProfileManager.getInstance().saveToFirestore()
-        ProfileManager.getInstance().loadDataFromFirestore()
+        ProfileManager.getInstance().loadProfilesFromFirestore()
     }
 
     override fun onTerminate() {

@@ -2,12 +2,11 @@ package dev.lordyorden.tradely.models
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
+import dev.lordyorden.tradely.interfaces.ProfileFetchCallback
 import dev.lordyorden.tradely.utilities.Constants
 import java.lang.ref.WeakReference
 import java.util.UUID
@@ -34,8 +33,9 @@ class ProfileManager private constructor(context: Context) {
     private val contextRef = WeakReference(context)
     private val db = Firebase.firestore
 
-    private val myId = UUID.fromString("6453a9bd-95a2-4045-9d99-c76f64b53f1f")
-    var myProfile: Profile = Profile.Builder().build()
+    var myProfile: Profile = Profile.Builder()
+        .id(UUID.fromString("6453a9bd-95a2-4045-9d99-c76f64b53f1f"))
+        .build()
 
     var profiles = mutableListOf<Profile>()
         private set
@@ -116,30 +116,38 @@ class ProfileManager private constructor(context: Context) {
 
     }
 
-    fun loadDataFromFirestore() {
-    val list: MutableList<Profile> = mutableListOf()
-
-    val moviesCollection = db.collection(Constants.DB.PROFILES_REF)
-    moviesCollection.get()
-        .addOnSuccessListener { result ->
-            for (document in result) {
-                val profile = document.toObject<Profile>()
-                profile.id = UUID.fromString(document.id)
-                list.add(profile)
-                Log.d("Loaded", "${document.id} => ${document.data}")
-            }
-        }
-        .addOnFailureListener { exception ->
-            Log.d("Error", "Error getting documents.", exception)
-        }.addOnCompleteListener {
-            profiles = list
-            updateMyProfile()
-        }
-
+    private fun onFinishLoading() {
+        myProfile = profiles.find { it.id == myProfile.id } ?: myProfile
     }
 
-    private fun updateMyProfile() {
-        myProfile = profiles.find { it.id == myId } ?: myProfile
+    private fun updateProfile(newProfile: Profile, fields: SetOptions = Constants.DB.PROFILE_UPLOAD_DEFAULT_OPTIONS){
+        val profileDoc = db.collection(Constants.DB.PROFILES_REF)
+        profileDoc.document(newProfile.id.toString())
+            .set(newProfile, fields)
+            .addOnSuccessListener {
+                Log.d("My Profile Updated", "Profile: ${newProfile.id}")
+            }
+            .addOnFailureListener {
+                Log.d("My Profile Update failed!", "Error updating ${newProfile.id}")
+            }
+    }
+
+    private fun getProfile(id: String, fetchCallback: ProfileFetchCallback){
+        val profileCollection = db.collection(Constants.DB.PROFILES_REF)
+        profileCollection.document(id)
+            .get()
+            .addOnSuccessListener { result ->
+                val profile: Profile? = result.toObject<Profile>()
+                if (profile != null){
+                    profile.id = UUID.fromString(result.id)
+                    Log.d("Profile fetched", "Profile: ${profile.id}")
+                    fetchCallback.onProfileFetch(profile)
+                }
+            }
+            .addOnFailureListener {
+                Log.d("Profile fetch failed!", "Error fetching $id")
+                fetchCallback.onProfileFetchFailed()
+            }
     }
 
     fun toggleFollow(id: String) {
@@ -148,12 +156,57 @@ class ProfileManager private constructor(context: Context) {
         } else {
             myProfile.following.add(id)
         }
+        updateProfile(myProfile)
+        toggleFollowerOf(id)
+    }
+
+    private fun toggleFollowerOf(id: String) {
+        getProfile(id, object : ProfileFetchCallback{
+            override fun onProfileFetch(profile: Profile) {
+                if (isFollowerOf(profile)) {
+                    profile.followers.remove(myProfile.id.toString())
+                } else {
+                    profile.followers.add(myProfile.id.toString())
+                }
+                updateProfile(profile)
+            }
+
+            override fun onProfileFetchFailed() {
+                Log.d("Error", "Error setting follower for $id")
+            }
+
+        })
     }
 
     fun isFollowing(id: String): Boolean {
         return myProfile.following.find { it == id } != null
     }
 
+    fun isFollowerOf(profile: Profile): Boolean {
+        return profile.followers.find { it == myProfile.id.toString() } != null
+    }
+
+    fun loadProfilesFromFirestore() {
+        val list: MutableList<Profile> = mutableListOf()
+
+        val profileCollection = db.collection(Constants.DB.PROFILES_REF)
+        profileCollection.get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    val profile = document.toObject<Profile>()
+                    profile.id = UUID.fromString(document.id)
+                    list.add(profile)
+                    Log.d("Loaded", "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("Error", "Error getting documents.", exception)
+            }.addOnCompleteListener {
+                profiles = list
+                onFinishLoading()
+            }
+
+    }
 
     fun saveToFirestore() {
         val profilesCollection = db.collection(Constants.DB.PROFILES_REF)
@@ -161,15 +214,7 @@ class ProfileManager private constructor(context: Context) {
             val documentId = profile.id.toString()
             //moviesCollection.add(movie) //also works
             profilesCollection.document(documentId)
-                .set(profile, SetOptions.mergeFields(
-                        "profilePic",
-                        "name",
-                        "netWorth",
-                        "country",
-                        "description",
-                        "change",
-                        "followers",
-                        "following"))
+                .set(profile, Constants.DB.PROFILE_UPLOAD_DEFAULT_OPTIONS)
                 .addOnSuccessListener {
                     Log.d("profiles Saved To DB", "Movie: $documentId")
                 }

@@ -12,7 +12,6 @@ data class Profile private constructor(
     val change: Double,
     var followers: MutableList<String>,
     var following: MutableList<String>,
-    var isFollowed: Boolean
 ) {
 
     constructor(): this(
@@ -23,12 +22,10 @@ data class Profile private constructor(
         country = "",
         description = "",
         change = 0.0,
-        isFollowed = false,
         followers = mutableListOf(),
         following = mutableListOf()
     )
 
-   fun toggleFollow() = apply { this.isFollowed = !this.isFollowed }
 
     class Builder {
         private var id: UUID = UUID.randomUUID()
@@ -38,7 +35,6 @@ data class Profile private constructor(
         private var country: String = ""
         private var description: String = ""
         private var change: Double = 0.0
-        private var isFollowed: Boolean = false
         private var followers: MutableList<String> = mutableListOf()
         private var following: MutableList<String> = mutableListOf()
 
@@ -61,7 +57,6 @@ data class Profile private constructor(
             country = country,
             description = description,
             change = change,
-            isFollowed = isFollowed,
             followers = followers,
             following = following
         )

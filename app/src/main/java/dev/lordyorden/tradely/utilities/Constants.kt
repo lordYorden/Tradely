@@ -1,11 +1,23 @@
 package dev.lordyorden.tradely.utilities
 
+import com.google.firebase.firestore.SetOptions
+
 class Constants {
     object DB {
         const val MESSAGE_REF = "message"
         const val MOVIE_REF = "movies"
         const val USERS_REF = "users"
         const val PROFILES_REF = "profiles"
+
+        val PROFILE_UPLOAD_DEFAULT_OPTIONS = SetOptions.mergeFields(
+            "profilePic",
+            "name",
+            "netWorth",
+            "country",
+            "description",
+            "change",
+            "followers",
+            "following")
     }
     object Data {
         const val ACTORS_MIN_LINES: Int = 1
