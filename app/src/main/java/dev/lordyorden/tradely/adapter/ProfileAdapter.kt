@@ -10,6 +10,7 @@ import dev.lordyorden.tradely.databinding.ProfileItemBinding
 //import dev.lordyorden.test_fragments.interfaces.MovieCallback
 import dev.lordyorden.tradely.models.Profile
 import dev.lordyorden.tradely.models.ProfileManager
+import dev.lordyorden.tradely.utilities.ImageLoader
 
 class ProfileAdapter(
     var profiles: List<Profile> = listOf(
@@ -79,6 +80,8 @@ class ProfileAdapter(
                     append(change)
                     append("%")
                 }
+
+                ImageLoader.getInstance().loadImage(profilePic, binding.profileIMGProfile)
 
                 setFollowButton(binding, ProfileManager.getInstance().isFollowing(id.toString()))
                 setChangeColorAndArrow(binding, change)
