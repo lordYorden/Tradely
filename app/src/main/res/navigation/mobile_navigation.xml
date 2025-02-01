@@ -19,7 +19,7 @@
 
     <fragment
         android:id="@+id/navigation_explore_stocks"
-        android:name="dev.lordyorden.tradely.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:name="dev.lordyorden.tradely.ui.explore.ExploreStocksFragment"
+        android:label="@string/explore_stocks"
+        tools:layout="@layout/fragment_explore_stocks" />
 </navigation>
