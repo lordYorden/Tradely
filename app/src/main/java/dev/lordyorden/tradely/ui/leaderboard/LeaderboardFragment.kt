@@ -40,7 +40,7 @@ class LeaderboardFragment : Fragment() {
         adapter.profileCallback = object : ProfileCallback {
             override fun onFollowClicked(profile: Profile, position: Int) {
                 ProfileManager.getInstance().toggleFollow(profile.id.toString())
-                adapter.notifyItemChanged(position)
+                //adapter.notifyItemChanged(position)
                 Toast.makeText(context, "Follow clicked on ${profile.name}", Toast.LENGTH_SHORT).show()
             }
 
@@ -48,7 +48,7 @@ class LeaderboardFragment : Fragment() {
 
         viewModel.profiles.observe(viewLifecycleOwner) { profiles ->
             if(profiles != null) {
-                adapter.profiles = profiles.sortedBy { it.netWorth }.reversed()
+                adapter.profiles = profiles
                 adapter.notifyDataSetChanged()
             }
         }

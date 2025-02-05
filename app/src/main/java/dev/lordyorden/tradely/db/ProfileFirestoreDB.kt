@@ -1,11 +1,13 @@
 package dev.lordyorden.tradely.db
 
 import android.util.Log
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
+import dev.lordyorden.tradely.interfaces.profile.ProfileChangesCallback
 import dev.lordyorden.tradely.interfaces.profile.ProfileDB
 import dev.lordyorden.tradely.interfaces.profile.ProfileFetchCallback
 import dev.lordyorden.tradely.interfaces.profile.ProfileUpdateCallback
@@ -42,9 +44,11 @@ class ProfileFirestoreDB : ProfileDB {
         profileCollection.document(id)
             .get()
             .addOnSuccessListener { result ->
-                val profile = buildProfile(result.id, result)
+                buildProfile(result.id, result)?.let {
+                    fetchCallback.onProfileFetch(it)
+                }
                 //Log.d("Profile fetched", "Profile: ${profile.id}")
-                fetchCallback.onProfileFetch(profile)
+
 //                //val profile: Profile? = result.toObject<Profile>()
 //                if (profile != null){
 //                    profile.id = UUID.fromString(result.id)
@@ -66,9 +70,11 @@ class ProfileFirestoreDB : ProfileDB {
                 for (document in result) {
 //                    val profile = document.toObject<Profile>()
 //                    profile.id = UUID.fromString(document.id)
-                    val profile = buildProfile(document.id, document)
+                    buildProfile(document.id, document)?.let {
+                        fetchCallback.onProfileFetch(it)
+                    }
                     //Log.d("Loaded", "${document.id} => ${document.data}")
-                    fetchCallback.onProfileFetch(profile)
+
                 }
             }
             .addOnFailureListener { exception ->
@@ -98,9 +104,47 @@ class ProfileFirestoreDB : ProfileDB {
         }
     }
 
-    private fun buildProfile(id: String, document: DocumentSnapshot): Profile {
-        val profile: Profile = document.toObject<Profile>()!!
-        profile.id = UUID.fromString(id)
+    override fun addListener(callback: ProfileChangesCallback) {
+        db.collection(Constants.DB.PROFILES_REF)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null)
+                    Log.d("Firestore", "Error Listening. $e")
+                val changes = StringBuilder()
+
+                snapshot?.documentChanges?.forEach { dc ->
+                    when (dc.type) {
+                        DocumentChange.Type.ADDED -> {
+                            changes.append("ADDED: ${dc.document.data} \n")
+                            buildProfile(dc.document.id, dc.document)?.let {
+                                callback.onProfileAdded(
+                                    it
+                                )
+                            }
+                        }
+
+                        DocumentChange.Type.REMOVED -> {
+                            changes.append("REMOVED: ${dc.document.data} \n")
+                            callback.onProfileRemoved(dc.document.id)
+                        }
+
+                        DocumentChange.Type.MODIFIED -> {
+                            changes.append("MODIFIED: ${dc.document.data} \n")
+                            buildProfile(dc.document.id, dc.document)?.let {
+                                callback.onProfileChanged(
+                                    it
+                                )
+                            }
+                        }
+                    }
+                    Log.d("listener", "listenToChangesOnFirestore: $changes")
+                }
+            }
+    }
+
+
+    private fun buildProfile(id: String, document: DocumentSnapshot): Profile? {
+        val profile: Profile? = document.toObject<Profile>()
+        profile?.id = UUID.fromString(id)
         return profile
     }
 }

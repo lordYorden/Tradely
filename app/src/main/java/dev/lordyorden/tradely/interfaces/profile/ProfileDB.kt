@@ -11,4 +11,6 @@ interface ProfileDB {
     fun loadProfiles(fetchCallback: ProfileFetchCallback)
 
     fun saveProfiles(profiles: List<Profile>, updateCallback: ProfileUpdateCallback)
+
+    fun addListener(callback: ProfileChangesCallback)
 }

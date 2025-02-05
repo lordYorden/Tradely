@@ -35,10 +35,11 @@ object ItemLoadingHelper {
     }
 
     private fun checkAndFormatIfInt(amount: Double, divisor: Int): String {
+        val formatedAmount = (amount / divisor)
         return if (amount % divisor == 0.0) {
-            (amount / divisor).toInt().toString()
+            formatedAmount.toInt().toString()
         } else {
-            amount.toString()
+            formatedAmount.toString()
         }
     }
 }
