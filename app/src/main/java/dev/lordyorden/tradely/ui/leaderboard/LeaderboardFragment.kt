@@ -48,7 +48,7 @@ class LeaderboardFragment : Fragment() {
 
         viewModel.profiles.observe(viewLifecycleOwner) { profiles ->
             if(profiles != null) {
-                adapter.profiles = profiles
+                adapter.profiles = profiles.sortedBy { it.netWorth }.reversed()
                 adapter.notifyDataSetChanged()
             }
         }

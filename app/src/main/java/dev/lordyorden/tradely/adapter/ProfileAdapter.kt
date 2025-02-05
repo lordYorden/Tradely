@@ -79,7 +79,7 @@ class ProfileAdapter(
                 binding.profileLBLDescription.text = description
                 binding.profileLBLNetWorth.text = buildString {
                     append("Net Worth: ")
-                    append(netWorth)
+                    append(ItemLoadingHelper.formatBigNumberToString(netWorth))
                     append("$")
                 }
 

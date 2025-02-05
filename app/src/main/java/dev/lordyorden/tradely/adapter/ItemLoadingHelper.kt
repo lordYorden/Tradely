@@ -5,7 +5,6 @@ import android.widget.TextView
 import androidx.viewbinding.ViewBinding
 
 import dev.lordyorden.tradely.R
-import dev.lordyorden.tradely.databinding.ProfileItemBinding
 
 object ItemLoadingHelper {
     fun setChangeColorAndArrow(binding: ViewBinding, label: TextView, icon: ImageView,  change: Double) {
@@ -23,6 +22,23 @@ object ItemLoadingHelper {
             label.setTextColor(negativeColor)
             icon.setImageResource(arrowDown)
             icon.setColorFilter(negativeColor)
+        }
+    }
+
+    fun formatBigNumberToString(num: Double) : String {
+        return when {
+            num >= 1_000_000_000 -> "${checkAndFormatIfInt(num, 1_000_000_000)}B"
+            num >= 1_000_000 -> "${checkAndFormatIfInt(num, 1_000_000)}M"
+            num >= 1_000 -> "${checkAndFormatIfInt(num, 1_000)}K"
+            else -> num.toString()
+        }
+    }
+
+    private fun checkAndFormatIfInt(amount: Double, divisor: Int): String {
+        return if (amount % divisor == 0.0) {
+            (amount / divisor).toInt().toString()
+        } else {
+            amount.toString()
         }
     }
 }
