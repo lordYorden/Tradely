@@ -10,10 +10,11 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         ProfileManager.init(this)
+        //ProfileManager.getInstance().saveProfiles()
         ImageLoader.init(this)
         StockManager.init(this)
         //ProfileManager.getInstance().saveToFirestore()
-        ProfileManager.getInstance().loadProfilesFromFirestore()
+        //ProfileManager.getInstance().loadProfilesFromFirestore()
     }
 
     override fun onTerminate() {

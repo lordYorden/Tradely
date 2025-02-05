@@ -3,7 +3,7 @@ package dev.lordyorden.tradely.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import dev.lordyorden.tradely.interfaces.ProfileCallback
+import dev.lordyorden.tradely.interfaces.profile.ProfileCallback
 import dev.lordyorden.tradely.R
 //import dev.lordyorden.test_fragments.utilities.Constants
 import dev.lordyorden.tradely.databinding.ProfileItemBinding
@@ -67,6 +67,13 @@ class ProfileAdapter(
 
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
         with(holder) {
+
+//            if (position == profiles.size - 1) {
+//                val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+//                params.bottomMargin = 200 // last item bottom margin
+//                holder.itemView.layoutParams = params
+//            }
+
             with(getItem(position)) {
                 binding.profileLBLName.text = name
                 binding.profileLBLDescription.text = description

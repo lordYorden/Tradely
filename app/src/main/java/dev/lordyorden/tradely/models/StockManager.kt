@@ -93,7 +93,7 @@ class StockManager private constructor(context: Context){
                 .marketCap(2000000)
                 .region("US")
                 .currency("USD")
-                .profilePic("https://api-ninjas-data.s3.us-west-2.amazonaws.com/logos/l11f3242118ff2add5d117cbf216f29ac578f6ba6.png")
+                .profilePic("https://mailmeteor.com/logos/assets/PNG/Microsoft_Logo_256px.png")
                 .description("Microsoft Corporation is an American multinational technology company with headquarters in Redmond, Washington.")
                 .build())
 
@@ -106,7 +106,7 @@ class StockManager private constructor(context: Context){
                 .marketCap(2000000)
                 .region("US")
                 .currency("USD")
-                .profilePic("https://api-ninjas-data.s3.us-west-2.amazonaws.com/logos/l0723013335c55d4193228fb0f1f0de4a4526aec0.png")
+                .profilePic("https://assets.stickpng.com/images/61fae2d395e6ca00047b4f12.png")
                 .description("Meta Platforms, Inc. is an American multinational technology conglomerate based in Menlo Park, California.")
                 .build())
 

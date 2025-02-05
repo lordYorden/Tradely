@@ -1,16 +1,12 @@
 package dev.lordyorden.tradely.adapter
 
+//import dev.lordyorden.test_fragments.utilities.Constants
+//import dev.lordyorden.test_fragments.interfaces.MovieCallback
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import dev.lordyorden.tradely.R
-//import dev.lordyorden.test_fragments.utilities.Constants
-import dev.lordyorden.tradely.databinding.ProfileItemBinding
 import dev.lordyorden.tradely.databinding.StockItemBinding
 import dev.lordyorden.tradely.interfaces.StockCallback
-//import dev.lordyorden.test_fragments.interfaces.MovieCallback
-import dev.lordyorden.tradely.models.Profile
-import dev.lordyorden.tradely.models.ProfileManager
 import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.utilities.ImageLoader
 
@@ -57,6 +53,13 @@ class StockAdapter(
 
     override fun onBindViewHolder(holder: StockViewHolder, position: Int) {
         with(holder) {
+
+            if (position == stocks.size - 1) {
+                val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+                params.bottomMargin = 200 // last item bottom margin
+                holder.itemView.layoutParams = params
+            }
+
             with(getItem(position)) {
                 binding.stockLBLName.text = symbol
                 binding.stockLBLDescription.text = description

@@ -8,13 +8,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import dev.lordyorden.tradely.adapter.ProfileAdapter
 import dev.lordyorden.tradely.adapter.StockAdapter
 import dev.lordyorden.tradely.databinding.FragmentExploreStocksBinding
-import dev.lordyorden.tradely.interfaces.ProfileCallback
 import dev.lordyorden.tradely.interfaces.StockCallback
-import dev.lordyorden.tradely.models.Profile
-import dev.lordyorden.tradely.models.ProfileManager
 import dev.lordyorden.tradely.models.Stock
 
 class ExploreStocksFragment : Fragment() {

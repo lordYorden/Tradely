@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.lordyorden.tradely.adapter.ProfileAdapter
-import dev.lordyorden.tradely.interfaces.ProfileCallback
+import dev.lordyorden.tradely.interfaces.profile.ProfileCallback
 import dev.lordyorden.tradely.databinding.FragmentLeaderboardBinding
 import dev.lordyorden.tradely.models.Profile
 import dev.lordyorden.tradely.models.ProfileManager
@@ -47,11 +47,10 @@ class LeaderboardFragment : Fragment() {
         }
 
         viewModel.profiles.observe(viewLifecycleOwner) { profiles ->
-            if (!viewModel.isFiltered){
-                viewModel.filterProfilesById(ProfileManager.getInstance().myProfile.id)
+            if(profiles != null) {
+                adapter.profiles = profiles
+                adapter.notifyDataSetChanged()
             }
-            adapter.profiles = profiles
-            adapter.notifyDataSetChanged()
         }
         return root
     }
