@@ -7,6 +7,7 @@ class Constants {
         const val MESSAGE_REF = "message"
         const val MOVIE_REF = "movies"
         const val USERS_REF = "users"
+        const val STOCKS_REF = "stocks"
         const val PROFILES_REF = "profiles"
 
         val PROFILE_UPLOAD_DEFAULT_OPTIONS = SetOptions.mergeFields(

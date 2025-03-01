@@ -1,4 +1,4 @@
-package dev.lordyorden.tradely.interfaces
+package dev.lordyorden.tradely.interfaces.stock
 
 import dev.lordyorden.tradely.models.Stock
 

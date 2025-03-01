@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import dev.lordyorden.tradely.databinding.StockItemBinding
-import dev.lordyorden.tradely.interfaces.StockCallback
+import dev.lordyorden.tradely.interfaces.stock.StockCallback
 import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.utilities.ImageLoader
 
@@ -71,9 +71,11 @@ class StockAdapter(
                     append("%")
                 }
 
+                ImageLoader.getInstance().loadImage("https://assets.parqet.com/logos/symbol/$symbol?format=jpg", binding.stockIMGStock)
+
                 ItemLoadingHelper.loadFlag(region, binding.stockIMGFlag)
 
-                ImageLoader.getInstance().loadImage(profilePic, binding.stockIMGStock)
+                /*ImageLoader.getInstance().loadImage(profilePic, binding.stockIMGStock)*/
                 ItemLoadingHelper.setChangeColorAndArrow(binding, binding.stockLBLChange, binding.stockIMGChange, change)
             }
         }

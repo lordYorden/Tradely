@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.ui.auth)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.database)
 
     //Gilde
     implementation(libs.glide)

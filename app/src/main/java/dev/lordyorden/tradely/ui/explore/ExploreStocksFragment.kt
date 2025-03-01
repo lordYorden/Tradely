@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.lordyorden.tradely.adapter.StockAdapter
 import dev.lordyorden.tradely.databinding.FragmentExploreStocksBinding
-import dev.lordyorden.tradely.interfaces.StockCallback
+import dev.lordyorden.tradely.interfaces.stock.StockCallback
 import dev.lordyorden.tradely.models.Stock
 
 class ExploreStocksFragment : Fragment() {
@@ -42,9 +43,35 @@ class ExploreStocksFragment : Fragment() {
             }
         }
 
+        binding.stocksSVSearch.setOnCloseListener {
+            viewModel.stopSearch()
+            false
+        }
+
+        binding.stocksSVSearch.setOnQueryTextListener(object :OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+//                query?.let {
+//                    viewModel.searchStocks(it)
+//                    return true
+//                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                newText?.let {
+                    viewModel.searchStocks(it)
+                    return true
+                }
+                return false
+            }
+
+        })
+
         viewModel.stocks.observe(viewLifecycleOwner) { stocks ->
-            adapter.stocks = stocks
-            adapter.notifyDataSetChanged()
+            if(stocks != null) {
+                adapter.stocks = stocks
+                adapter.notifyDataSetChanged()
+            }
         }
         return root
     }

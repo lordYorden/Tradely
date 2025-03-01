@@ -1,11 +1,10 @@
 package dev.lordyorden.tradely.models
 
 import android.content.Context
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import dev.lordyorden.tradely.interfaces.stock.StockDB
 import java.lang.ref.WeakReference
 
-class StockManager private constructor(context: Context){
+class StockManager private constructor(context: Context, val db: StockDB){
 
     companion object {
 
@@ -17,15 +16,14 @@ class StockManager private constructor(context: Context){
                 ?: throw IllegalStateException("StockManager must be initialized by calling init(context) before use")
         }
 
-        fun init(context: Context): StockManager {
+        fun init(context: Context, stockDB: StockDB): StockManager {
             return instance ?: synchronized(this) {
-                instance ?: StockManager(context).also { instance = it }
+                instance ?: StockManager(context, stockDB).also { instance = it }
             }
         }
     }
 
     private val contextRef = WeakReference(context)
-    private val db = Firebase.firestore
 
     var stocks = generateStocks()
         private set
@@ -111,5 +109,9 @@ class StockManager private constructor(context: Context){
                 .build())
 
         return stocks
+    }
+
+    fun uploadStocks(){
+        db.saveStocks(stocks)
     }
 }
