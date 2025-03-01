@@ -71,6 +71,8 @@ class StockAdapter(
                     append("%")
                 }
 
+                ItemLoadingHelper.loadFlag(region, binding.stockIMGFlag)
+
                 ImageLoader.getInstance().loadImage(profilePic, binding.stockIMGStock)
                 ItemLoadingHelper.setChangeColorAndArrow(binding, binding.stockLBLChange, binding.stockIMGChange, change)
             }

@@ -1,5 +1,8 @@
 package dev.lordyorden.tradely.models
 
+import android.util.Log
+import java.util.Locale
+
 data class Profile private constructor(
     var id: String,
     val profilePic: String,
@@ -24,13 +27,24 @@ data class Profile private constructor(
         following = mutableListOf()
     )
 
+    companion object CountryCodeCheck {
+        fun isValidCountry(countryCode: String): Boolean {
+            try {
+                Locale.getISOCountries().first { it == countryCode }
+            }catch (_: NoSuchElementException){
+                return false
+            }
+            return countryCode.length <= 2
+        }
+    }
+
 
     class Builder {
         private var id: String = ""
         private var profilePic: String = ""
         private var name: String = ""
         private var netWorth: Double = 0.0
-        private var country: String = ""
+        private var country: String = "AQ"
         private var description: String = ""
         private var change: Double = 0.0
         private var followers: MutableList<String> = mutableListOf()
@@ -40,7 +54,13 @@ data class Profile private constructor(
         fun profilePic(profilePic: String) = apply { this.profilePic = profilePic }
         fun name(name: String) = apply { this.name = name }
         fun netWorth(netWorth: Double) = apply { this.netWorth = netWorth }
-        fun country(country: String) = apply { this.country = country }
+        fun country(country: String) = apply {
+            if(isValidCountry(country))
+                this.country = country
+            else
+                Log.e("Profile creation", "$country is not a valid country code")
+        }
+
         fun description(description: String) = apply { this.description = description }
         fun change(change: Double) = apply { this.change = change }
         fun id(id: String) = apply { this.id = id }

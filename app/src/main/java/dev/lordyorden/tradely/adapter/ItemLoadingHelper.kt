@@ -2,10 +2,13 @@ package dev.lordyorden.tradely.adapter
 
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 
 import dev.lordyorden.tradely.R
+import dev.lordyorden.tradely.models.Profile
+import dev.lordyorden.tradely.utilities.ImageLoader
 
 object ItemLoadingHelper {
     fun setChangeColorAndArrow(binding: ViewBinding, label: TextView, icon: ImageView,  change: Double) {
@@ -54,5 +57,12 @@ object ItemLoadingHelper {
             }
         }
         return params
+    }
+
+    fun loadFlag(country: String, imageView: AppCompatImageView){
+        if(!Profile.isValidCountry(country)) return
+
+        val flagUrl = "https://flagsapi.com/$country/flat/64.png"
+        ImageLoader.getInstance().loadImage(flagUrl, imageView, R.drawable.il)
     }
 }

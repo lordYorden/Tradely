@@ -89,6 +89,8 @@ class ProfileAdapter(
                     append("%")
                 }
 
+                ItemLoadingHelper.loadFlag(country, binding.profileIMGFlag)
+
                 ImageLoader.getInstance().loadImage(profilePic, binding.profileIMGProfile)
 
                 setFollowButton(binding, ProfileManager.getInstance().isFollowing(id))
