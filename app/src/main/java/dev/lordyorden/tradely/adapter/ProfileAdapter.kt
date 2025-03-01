@@ -68,11 +68,8 @@ class ProfileAdapter(
     override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
         with(holder) {
 
-//            if (position == profiles.size - 1) {
-//                val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
-//                params.bottomMargin = 200 // last item bottom margin
-//                holder.itemView.layoutParams = params
-//            }
+            val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+            holder.itemView.layoutParams = ItemLoadingHelper.fixedLastMargin(params, position, profiles.size)
 
             with(getItem(position)) {
                 binding.profileLBLName.text = name
@@ -90,7 +87,7 @@ class ProfileAdapter(
 
                 ImageLoader.getInstance().loadImage(profilePic, binding.profileIMGProfile)
 
-                setFollowButton(binding, ProfileManager.getInstance().isFollowing(id.toString()))
+                setFollowButton(binding, ProfileManager.getInstance().isFollowing(id))
                 setChangeColorAndArrow(binding, change)
             }
         }

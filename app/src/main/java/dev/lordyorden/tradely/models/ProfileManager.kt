@@ -2,14 +2,12 @@ package dev.lordyorden.tradely.models
 
 import android.content.Context
 import android.util.Log
-import dev.lordyorden.tradely.db.ProfileFirestoreDB
 import dev.lordyorden.tradely.interfaces.profile.ProfileDB
 import dev.lordyorden.tradely.interfaces.profile.ProfileFetchCallback
 import dev.lordyorden.tradely.interfaces.profile.ProfileUpdateCallback
 import java.lang.ref.WeakReference
-import java.util.UUID
 
-class ProfileManager private constructor(context: Context) {
+class ProfileManager private constructor(context: Context, val db: ProfileDB) {
 
     companion object {
 
@@ -21,22 +19,44 @@ class ProfileManager private constructor(context: Context) {
                 ?: throw IllegalStateException("ProfileManager must be initialized by calling init(context) before use")
         }
 
-        fun init(context: Context): ProfileManager {
+        fun init(context: Context, profileDB: ProfileDB): ProfileManager {
             return instance ?: synchronized(this) {
-                instance ?: ProfileManager(context).also { instance = it }
+                instance ?: ProfileManager(context, profileDB).also { instance = it }
             }
         }
+
     }
 
     private val contextRef = WeakReference(context)
-    val db: ProfileDB = ProfileFirestoreDB()
 
     var myProfile: Profile = Profile.Builder()
-        .id(UUID.fromString("a0d2bab4-16e3-4d23-93d3-ac144c0b086f"))
+        .id("a0d2bab4-16e3-4d23-93d3-ac144c0b086f")
         .build()
 
-//    var profiles = mutableListOf<Profile>()
-//        private set
+    fun loadOrCreateProfile(profile: Profile) {
+        val id = profile.id
+        db.getProfile(id, object : ProfileFetchCallback {
+            override fun onProfileFetch(profile: Profile) {
+                myProfile = profile
+                Log.d("Profile loaded", "profile was loaded from db for $id")
+            }
+
+            override fun onProfileFetchFailed() {
+                db.updateProfile(profile, object : ProfileUpdateCallback {
+                    override fun onUpdateSuccess(id: String) {
+                        Log.d("New Profile", "Profile created for $id")
+                        myProfile = profile
+                    }
+
+                    override fun onUpdateFailed(id: String) {
+                        Log.e("New Profile", "Profile creation failed for $id")
+                    }
+
+                })
+            }
+
+        })
+    }
 
     private fun generateProfileList(): List<Profile> {
         val profiles = mutableListOf<Profile>()
@@ -62,7 +82,7 @@ class ProfileManager private constructor(context: Context) {
                 .country("United States")
                 .description("Tesla, SpaceX")
                 .change(2.5)
-                .id(UUID.fromString("6453a9bd-95a2-4045-9d99-c76f64b53f1f"))
+                .id("6453a9bd-95a2-4045-9d99-c76f64b53f1f")
                 .profilePic("https://static.wikia.nocookie.net/rickandmorty/images/e/ee/S4e3_2019-11-28-13h17m16s986.png/revision/latest?cb=20191128184507")
                 .build()
         )
@@ -124,7 +144,7 @@ class ProfileManager private constructor(context: Context) {
 //        myProfile = profiles.find { it.id == myProfile.id } ?: myProfile
 //    }
 
-    private fun updateProfile(profile: Profile){
+    private fun updateProfile(profile: Profile) {
         db.updateProfile(profile, object : ProfileUpdateCallback {
             override fun onUpdateSuccess(id: String) {
                 Log.d("Profile DB Update", "Profile updated $id")
@@ -136,17 +156,17 @@ class ProfileManager private constructor(context: Context) {
         })
     }
 
-/*    private fun updateProfile(newProfile: Profile, fields: SetOptions = Constants.DB.PROFILE_UPLOAD_DEFAULT_OPTIONS){
-        val profileDoc = db.collection(Constants.DB.PROFILES_REF)
-        profileDoc.document(newProfile.id.toString())
-            .set(newProfile, fields)
-            .addOnSuccessListener {
-                Log.d("My Profile Updated", "Profile: ${newProfile.id}")
-            }
-            .addOnFailureListener {
-                Log.d("My Profile Update failed!", "Error updating ${newProfile.id}")
-            }
-    }*/
+    /*    private fun updateProfile(newProfile: Profile, fields: SetOptions = Constants.DB.PROFILE_UPLOAD_DEFAULT_OPTIONS){
+            val profileDoc = db.collection(Constants.DB.PROFILES_REF)
+            profileDoc.document(newProfile.id.toString())
+                .set(newProfile, fields)
+                .addOnSuccessListener {
+                    Log.d("My Profile Updated", "Profile: ${newProfile.id}")
+                }
+                .addOnFailureListener {
+                    Log.d("My Profile Update failed!", "Error updating ${newProfile.id}")
+                }
+        }*/
 
     /*private fun getProfile(id: String, fetchCallback: ProfileFetchCallback){
         val profileCollection = db.collection(Constants.DB.PROFILES_REF)
@@ -180,9 +200,9 @@ class ProfileManager private constructor(context: Context) {
         db.getProfile(id, object : ProfileFetchCallback {
             override fun onProfileFetch(profile: Profile) {
                 if (isFollowerOf(profile)) {
-                    profile.followers.remove(myProfile.id.toString())
+                    profile.followers.remove(myProfile.id)
                 } else {
-                    profile.followers.add(myProfile.id.toString())
+                    profile.followers.add(myProfile.id)
                 }
                 updateProfile(profile)
             }
@@ -199,12 +219,12 @@ class ProfileManager private constructor(context: Context) {
     }
 
     fun isFollowerOf(profile: Profile): Boolean {
-        return profile.followers.find { it == myProfile.id.toString() } != null
+        return profile.followers.find { it == myProfile.id } != null
     }
 
     fun loadProfiles(fetchCallback: ProfileFetchCallback) {
         db.loadProfiles(fetchCallback)
-        db.getProfile(myProfile.id.toString(), object : ProfileFetchCallback {
+        db.getProfile(myProfile.id, object : ProfileFetchCallback {
             override fun onProfileFetch(profile: Profile) {
                 myProfile = profile
             }
@@ -215,28 +235,27 @@ class ProfileManager private constructor(context: Context) {
 
         })
     }
+    /*    fun loadProfilesFromFirestore() {
+            val list: MutableList<Profile> = mutableListOf()
 
-/*    fun loadProfilesFromFirestore() {
-        val list: MutableList<Profile> = mutableListOf()
-
-        val profileCollection = db.collection(Constants.DB.PROFILES_REF)
-        profileCollection.get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    val profile = document.toObject<Profile>()
-                    profile.id = UUID.fromString(document.id)
-                    list.add(profile)
-                    Log.d("Loaded", "${document.id} => ${document.data}")
+            val profileCollection = db.collection(Constants.DB.PROFILES_REF)
+            profileCollection.get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        val profile = document.toObject<Profile>()
+                        profile.id = UUID.fromString(document.id)
+                        list.add(profile)
+                        Log.d("Loaded", "${document.id} => ${document.data}")
+                    }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.d("Error", "Error getting documents.", exception)
-            }.addOnCompleteListener {
-                profiles = list
-                onFinishLoading()
-            }
+                .addOnFailureListener { exception ->
+                    Log.d("Error", "Error getting documents.", exception)
+                }.addOnCompleteListener {
+                    profiles = list
+                    onFinishLoading()
+                }
 
-    }*/
+        }*/
 
     fun saveProfiles() {
 //        val profilesCollection = db.collection(Constants.DB.PROFILES_REF)

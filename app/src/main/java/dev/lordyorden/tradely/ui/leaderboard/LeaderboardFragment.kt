@@ -37,9 +37,11 @@ class LeaderboardFragment : Fragment() {
         adapter = ProfileAdapter()
         binding.leaderboardRVProfiles.adapter = adapter
         binding.leaderboardRVProfiles.layoutManager = LinearLayoutManager(context)
+
+
         adapter.profileCallback = object : ProfileCallback {
             override fun onFollowClicked(profile: Profile, position: Int) {
-                ProfileManager.getInstance().toggleFollow(profile.id.toString())
+                ProfileManager.getInstance().toggleFollow(profile.id)
                 //adapter.notifyItemChanged(position)
                 Toast.makeText(context, "Follow clicked on ${profile.name}", Toast.LENGTH_SHORT).show()
             }

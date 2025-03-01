@@ -2,6 +2,7 @@ package dev.lordyorden.tradely.adapter
 
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 
 import dev.lordyorden.tradely.R
@@ -41,5 +42,17 @@ object ItemLoadingHelper {
         } else {
             formatedAmount.toString()
         }
+    }
+
+    fun fixedLastMargin(params: RecyclerView.LayoutParams, position: Int, size: Int): RecyclerView.LayoutParams{
+        when(position){
+            size - 1 -> {
+                params.bottomMargin = 200 // last item bottom margin
+            }
+            else -> {
+                params.bottomMargin = 0 // last item bottom margin
+            }
+        }
+        return params
     }
 }

@@ -13,7 +13,6 @@ import dev.lordyorden.tradely.interfaces.profile.ProfileFetchCallback
 import dev.lordyorden.tradely.interfaces.profile.ProfileUpdateCallback
 import dev.lordyorden.tradely.models.Profile
 import dev.lordyorden.tradely.utilities.Constants
-import java.util.UUID
 
 class ProfileFirestoreDB : ProfileDB {
 
@@ -27,15 +26,15 @@ class ProfileFirestoreDB : ProfileDB {
 
     private fun updateProfile(newProfile: Profile, fields: SetOptions, updateCallback: ProfileUpdateCallback){
         val profileDoc = db.collection(Constants.DB.PROFILES_REF)
-        profileDoc.document(newProfile.id.toString())
+        profileDoc.document(newProfile.id)
             .set(newProfile, fields)
             .addOnSuccessListener {
                 Log.d("My Profile Updated", "Profile: ${newProfile.id}")
-                updateCallback.onUpdateSuccess(newProfile.id.toString())
+                updateCallback.onUpdateSuccess(newProfile.id)
             }
             .addOnFailureListener {
                 Log.d("My Profile Update failed!", "Error updating ${newProfile.id}")
-                updateCallback.onUpdateFailed(newProfile.id.toString())
+                updateCallback.onUpdateFailed(newProfile.id)
             }
     }
 
@@ -46,8 +45,8 @@ class ProfileFirestoreDB : ProfileDB {
             .addOnSuccessListener { result ->
                 buildProfile(result.id, result)?.let {
                     fetchCallback.onProfileFetch(it)
-                }
-                //Log.d("Profile fetched", "Profile: ${profile.id}")
+                } ?: fetchCallback.onProfileFetchFailed()
+                //Log.d("Profile fetched", "Profile: ${result.id}")
 
 //                //val profile: Profile? = result.toObject<Profile>()
 //                if (profile != null){
@@ -89,7 +88,7 @@ class ProfileFirestoreDB : ProfileDB {
     override fun saveProfiles(profiles: List<Profile>, updateCallback: ProfileUpdateCallback) {
         val profilesCollection = db.collection(Constants.DB.PROFILES_REF)
         profiles.forEach { profile ->
-            val documentId = profile.id.toString()
+            val documentId = profile.id
             //moviesCollection.add(movie) //also works
             profilesCollection.document(documentId)
                 .set(profile, profileParams)
@@ -108,7 +107,7 @@ class ProfileFirestoreDB : ProfileDB {
         db.collection(Constants.DB.PROFILES_REF)
             .addSnapshotListener { snapshot, e ->
                 if (e != null)
-                    Log.d("Firestore", "Error Listening. $e")
+                    Log.e("Firestore", "Error Listening. $e")
                 val changes = StringBuilder()
 
                 snapshot?.documentChanges?.forEach { dc ->
@@ -144,7 +143,7 @@ class ProfileFirestoreDB : ProfileDB {
 
     private fun buildProfile(id: String, document: DocumentSnapshot): Profile? {
         val profile: Profile? = document.toObject<Profile>()
-        profile?.id = UUID.fromString(id)
+        profile?.id = id
         return profile
     }
 }

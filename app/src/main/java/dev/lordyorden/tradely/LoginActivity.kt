@@ -3,14 +3,13 @@ package dev.lordyorden.tradely
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
+import dev.lordyorden.tradely.models.Profile
+import dev.lordyorden.tradely.models.ProfileManager
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,8 +73,21 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun transactToNextScreen() {
+        loadProfile()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun loadProfile() {
+        val user = FirebaseAuth.getInstance().currentUser
+        user?.let {
+            val profile: Profile = Profile.Builder()
+                .id(it.uid)
+                .name(it.displayName.toString())
+                .profilePic(it.photoUrl.toString())
+                .build()
+            ProfileManager.getInstance().loadOrCreateProfile(profile)
+        }
     }
 }

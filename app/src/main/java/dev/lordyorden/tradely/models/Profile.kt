@@ -1,9 +1,7 @@
 package dev.lordyorden.tradely.models
 
-import java.util.UUID
-
 data class Profile private constructor(
-    var id: UUID,
+    var id: String,
     val profilePic: String,
     val name: String,
     val netWorth: Double,
@@ -15,7 +13,7 @@ data class Profile private constructor(
 ) {
 
     constructor(): this(
-        id = UUID.randomUUID(),
+        id = "",
         profilePic = "",
         name = "",
         netWorth = 0.0,
@@ -28,7 +26,7 @@ data class Profile private constructor(
 
 
     class Builder {
-        private var id: UUID = UUID.randomUUID()
+        private var id: String = ""
         private var profilePic: String = ""
         private var name: String = ""
         private var netWorth: Double = 0.0
@@ -45,7 +43,7 @@ data class Profile private constructor(
         fun country(country: String) = apply { this.country = country }
         fun description(description: String) = apply { this.description = description }
         fun change(change: Double) = apply { this.change = change }
-        fun id(id: UUID) = apply { this.id = id }
+        fun id(id: String) = apply { this.id = id }
         fun followers(followers: MutableList<String>) = apply { this.followers = followers }
         fun following(following: MutableList<String>) = apply { this.following = following }
 

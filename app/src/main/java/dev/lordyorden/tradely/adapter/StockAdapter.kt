@@ -54,11 +54,8 @@ class StockAdapter(
     override fun onBindViewHolder(holder: StockViewHolder, position: Int) {
         with(holder) {
 
-            if (position == stocks.size - 1) {
-                val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
-                params.bottomMargin = 200 // last item bottom margin
-                holder.itemView.layoutParams = params
-            }
+            val params = holder.itemView.layoutParams as RecyclerView.LayoutParams
+            holder.itemView.layoutParams = ItemLoadingHelper.fixedLastMargin(params, position, stocks.size)
 
             with(getItem(position)) {
                 binding.stockLBLName.text = symbol

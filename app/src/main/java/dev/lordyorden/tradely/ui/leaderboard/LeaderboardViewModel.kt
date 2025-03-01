@@ -8,7 +8,6 @@ import dev.lordyorden.tradely.interfaces.profile.ProfileChangesCallback
 import dev.lordyorden.tradely.interfaces.profile.ProfileFetchCallback
 import dev.lordyorden.tradely.models.Profile
 import dev.lordyorden.tradely.models.ProfileManager
-import java.util.UUID
 
 class LeaderboardViewModel : ViewModel() {
 
@@ -27,7 +26,7 @@ class LeaderboardViewModel : ViewModel() {
 
             override fun onProfileRemoved(id: String) {
                 if (_profiles.value != null)
-                    setProfiles(filterProfilesById(UUID.fromString(id), _profiles.value!!))
+                    setProfiles(filterProfilesById(id, _profiles.value!!))
             }
 
             override fun onProfileAdded(profile: Profile) {
@@ -59,7 +58,7 @@ class LeaderboardViewModel : ViewModel() {
         _profiles.value = filterProfilesById(profileManager.myProfile.id, profiles).sortedBy { it.netWorth }.reversed()
     }
 
-    fun filterProfilesById(id: UUID, profiles: List<Profile>): List<Profile> {
+    fun filterProfilesById(id: String, profiles: List<Profile>): List<Profile> {
         return profiles.filter { profile -> profile.id != id }
     }
 
