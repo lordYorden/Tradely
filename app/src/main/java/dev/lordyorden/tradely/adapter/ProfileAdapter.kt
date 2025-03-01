@@ -72,6 +72,10 @@ class ProfileAdapter(
             holder.itemView.layoutParams = ItemLoadingHelper.fixedLastMargin(params, position, profiles.size)
 
             with(getItem(position)) {
+                binding.profileLBLPlace.text = buildString {
+                    append("#")
+                    append(position+1)
+                }
                 binding.profileLBLName.text = name
                 binding.profileLBLDescription.text = description
                 binding.profileLBLNetWorth.text = buildString {
