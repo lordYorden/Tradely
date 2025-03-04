@@ -1,9 +1,11 @@
 package dev.lordyorden.tradely.ui.explore
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dev.lordyorden.tradely.interfaces.stock.StockChangesCallback
+import dev.lordyorden.tradely.interfaces.stock.StockFetchCallback
 import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.models.StockManager
 import java.util.Locale
@@ -22,12 +24,12 @@ class ExploreStocksViewModel : ViewModel() {
         stockManager.db.registerStocks(object: StockChangesCallback{
             override fun onStockChanged(stock: Stock) {
                 if (_stocks.value != null)
-                    setStocks(filterProfilesBySymbol(stock.symbol, _stocks.value!!) + stock)
+                    setStocks(filterStocksBySymbol(stock.symbol, _stocks.value!!) + stock)
             }
 
             override fun onStockRemoved(symbol: String) {
                 if (_stocks.value != null)
-                    setStocks(filterProfilesBySymbol(symbol, _stocks.value!!))
+                    setStocks(filterStocksBySymbol(symbol, _stocks.value!!))
             }
 
             override fun onStockAdded(stock: Stock) {
@@ -41,7 +43,7 @@ class ExploreStocksViewModel : ViewModel() {
         })
     }
 
-    private fun filterProfilesBySymbol(symbol: String, stocks: List<Stock>): List<Stock> {
+    private fun filterStocksBySymbol(symbol: String, stocks: List<Stock>): List<Stock> {
         return stocks.filter { stock -> stock.symbol != symbol }
     }
 
@@ -54,6 +56,27 @@ class ExploreStocksViewModel : ViewModel() {
                 rawStocks = _stocks.value!!
             else
                 setStocks(rawStocks!!.filter { stock -> stock.symbol.startsWith(symbol.uppercase(Locale.getDefault())) })
+    }
+
+    fun deepSearch(keyword: String){
+        stockManager.searchStock(keyword, object: StockFetchCallback{
+            override fun onStockFetch(stock: Stock) {
+                addStock(stock)
+            }
+
+            override fun onStockFetchFailed() {
+                Log.e("Search result", "noting was found")
+            }
+
+        })
+    }
+
+    fun addStock(stock: Stock) {
+        if (_stocks.value != null)
+            _stocks.postValue(_stocks.value!! + stock)
+        else{
+            _stocks.postValue(listOf(stock))
+        }
     }
 
     fun stopSearch() {

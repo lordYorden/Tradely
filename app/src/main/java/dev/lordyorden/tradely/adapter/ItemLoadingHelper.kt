@@ -50,7 +50,7 @@ object ItemLoadingHelper {
     fun fixedLastMargin(params: RecyclerView.LayoutParams, position: Int, size: Int): RecyclerView.LayoutParams{
         when(position){
             size - 1 -> {
-                params.bottomMargin = 200 // last item bottom margin
+                params.bottomMargin = 250 // last item bottom margin
             }
             else -> {
                 params.bottomMargin = 0 // last item bottom margin
@@ -63,6 +63,6 @@ object ItemLoadingHelper {
         if(!Profile.isValidCountry(country)) return
 
         val flagUrl = "https://flagsapi.com/$country/flat/64.png"
-        ImageLoader.getInstance().loadImage(flagUrl, imageView, R.drawable.il)
+        ImageLoader.getInstance().loadImage(flagUrl, imageView, R.drawable.us)
     }
 }

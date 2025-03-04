@@ -50,10 +50,9 @@ class ExploreStocksFragment : Fragment() {
 
         binding.stocksSVSearch.setOnQueryTextListener(object :OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean {
-//                query?.let {
-//                    viewModel.searchStocks(it)
-//                    return true
-//                }
+                query?.let {
+                    viewModel.deepSearch(it)
+                }
                 return false
             }
 

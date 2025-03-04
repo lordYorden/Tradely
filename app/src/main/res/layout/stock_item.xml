@@ -35,13 +35,25 @@
             tools:text="APPL" />
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/stock_LBL_market_cap"
+            android:id="@+id/stock_LBL_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/stock_LBL_name"
             android:layout_margin="4dp"
             android:textColor="@color/text_color"
-            tools:text="Net Worth: 5$"
+            tools:text="Price: 5$"
+            android:visibility="visible"
+            android:textStyle="bold"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/stock_LBL_market_cap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/stock_LBL_name"
+            android:layout_toEndOf="@id/stock_LBL_price"
+            android:layout_margin="4dp"
+            android:textColor="@color/text_color"
+            tools:text="Market Cap: 5$"
             android:visibility="gone"
             android:textStyle="bold"/>
 
@@ -50,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/text_color"
-            android:layout_below="@id/stock_LBL_market_cap"
+            android:layout_below="@id/stock_LBL_price"
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
 
@@ -113,14 +125,14 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="4dp"
                 android:textColor="@color/text_color"
-                android:text = "@string/edit"/>
+                android:text = "@string/trade"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/stock_IMG_edit"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="7dp"
-                app:srcCompat="@drawable/ic_edit"
+                app:srcCompat="@android:drawable/ic_input_add"
                 android:tint="@color/text_color"
                 />
 

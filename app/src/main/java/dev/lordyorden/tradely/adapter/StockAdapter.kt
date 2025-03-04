@@ -9,6 +9,7 @@ import dev.lordyorden.tradely.databinding.StockItemBinding
 import dev.lordyorden.tradely.interfaces.stock.StockCallback
 import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.utilities.ImageLoader
+import java.util.Locale
 
 class StockAdapter(
     var stocks: List<Stock> = listOf(
@@ -62,14 +63,17 @@ class StockAdapter(
                 binding.stockLBLDescription.text = description
                 binding.stockLBLMarketCap.text = buildString {
                     append("Market Cap: ")
-                    append(marketCap)
+                    append(ItemLoadingHelper.formatBigNumberToString(marketCap.toDouble()))
                     append("$")
                 }
 
-                binding.stockLBLChange.text = buildString {
-                    append(change)
-                    append("%")
+                binding.stockLBLPrice.text = buildString {
+                    append("Price: ")
+                    append(pricePerShare)
+                    append("$")
                 }
+
+                binding.stockLBLChange.text = String.format(Locale.getDefault(), "%.2f%%", change)
 
                 ImageLoader.getInstance().loadImage("https://assets.parqet.com/logos/symbol/$symbol?format=jpg", binding.stockIMGStock)
 

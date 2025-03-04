@@ -306,3 +306,4 @@ obj/
 
 # End of https://www.toptal.com/developers/gitignore/api/android,intellij,kotlin,git,androidstudio
 /secrets.properties
+/local.env
