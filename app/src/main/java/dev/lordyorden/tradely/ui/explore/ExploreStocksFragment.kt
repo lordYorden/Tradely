@@ -1,5 +1,6 @@
 package dev.lordyorden.tradely.ui.explore
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ class ExploreStocksFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -67,7 +69,7 @@ class ExploreStocksFragment : Fragment() {
         })
 
         viewModel.stocks.observe(viewLifecycleOwner) { stocks ->
-            if(stocks != null) {
+            if(stocks.isNotEmpty()) {
                 adapter.stocks = stocks
                 adapter.notifyDataSetChanged()
             }

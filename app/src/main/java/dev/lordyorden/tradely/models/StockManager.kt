@@ -1,41 +1,50 @@
 package dev.lordyorden.tradely.models
 
-import android.content.Context
 import android.util.Log
 import com.google.gson.JsonParser
 import dev.lordyorden.tradely.BuildConfig
+import dev.lordyorden.tradely.interfaces.stock.StockChangesCallback
 import dev.lordyorden.tradely.interfaces.stock.StockDB
 import dev.lordyorden.tradely.interfaces.stock.StockFetchCallback
+import dev.lordyorden.tradely.interfaces.stock.StockUpdateCallback
 import dev.lordyorden.tradely.utilities.HttpRequestHandler
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
-import java.lang.ref.WeakReference
 
-class StockManager private constructor(context: Context, val db: StockDB) {
+class StockManager(private val db: StockDB) {
 
-    companion object {
+    val stocks: MutableList<Stock> = mutableListOf()
 
-        @Volatile
-        private var instance: StockManager? = null
-
-        fun getInstance(): StockManager {
-            return instance
-                ?: throw IllegalStateException("StockManager must be initialized by calling init(context) before use")
-        }
-
-        fun init(context: Context, stockDB: StockDB): StockManager {
-            return instance ?: synchronized(this) {
-                instance ?: StockManager(context, stockDB).also { instance = it }
-            }
-        }
+    private fun filterStocksBySymbol(symbol: String) {
+        stocks.removeIf { stock -> stock.symbol == symbol }
     }
 
-    private val contextRef = WeakReference(context)
+    fun registerStocks(callback: StockUpdateCallback) {
+        db.registerStocks(object : StockChangesCallback {
+            override fun onStockChanged(stock: Stock) {
+                if (stocks.isNotEmpty()) {
+                    filterStocksBySymbol(stock.symbol)
+                }
 
-    var stocks = generateStocks()
-        private set
+                stocks.add(stock)
+                callback.updateStocks()
+            }
+
+            override fun onStockRemoved(symbol: String) {
+                if (stocks.isNotEmpty())
+                    filterStocksBySymbol(symbol)
+                callback.updateStocks()
+            }
+
+            override fun onStockAdded(stock: Stock) {
+                stocks.add(stock)
+                callback.updateStocks()
+            }
+
+        })
+    }
 
     private fun generateStocks(): List<Stock> {
         val stocks = mutableListOf<Stock>()
@@ -126,10 +135,6 @@ class StockManager private constructor(context: Context, val db: StockDB) {
         return stocks
     }
 
-    fun uploadStocks() {
-        db.saveStocks(stocks)
-    }
-
     fun getCountryCodeFromJson(json: String, state: String, city: String): String? {
         try {
             val obj = JsonParser.parseString(json).asJsonObject
@@ -149,7 +154,9 @@ class StockManager private constructor(context: Context, val db: StockDB) {
             }
             return null
 
-        }catch (e: IllegalStateException){
+        } catch (e: IllegalStateException) {
+            return null
+        }catch (e: NullPointerException){
             return null
         }
     }
@@ -202,58 +209,7 @@ class StockManager private constructor(context: Context, val db: StockDB) {
         })
     }
 
-
     fun searchStock(keyword: String, callback: StockFetchCallback) {
-
-     /*   val test_json = """{
-                                    "bestMatches": [
-                                        {
-                                            "1. symbol": "AAPL",
-                                            "2. name": "Apple Inc",
-                                            "3. type": "Equity",
-                                            "4. region": "United States",
-                                            "5. marketOpen": "09:30",
-                                            "6. marketClose": "16:00",
-                                            "7. timezone": "UTC-04",
-                                            "8. currency": "USD",
-                                            "9. matchScore": "1.0000"
-                                        },
-                                        {
-                                            "1. symbol": "F",
-                                            "2. name": "Ford Motor Co",
-                                            "3. type": "Equity",
-                                            "4. region": "New York",
-                                            "5. marketOpen": "09:30",
-                                            "6. marketClose": "16:00",
-                                            "7. timezone": "UTC-05",
-                                            "8. currency": "USD",
-                                            "9. matchScore": "0.7273"
-                                        },
-                                        {
-                                            "1. symbol": "MCD",
-                                            "2. name": "McDonald's corp",
-                                            "3. type": "Equity",
-                                            "4. region": "New York",
-                                            "5. marketOpen": "10:00",
-                                            "6. marketClose": "17:30",
-                                            "7. timezone": "UTC-03",
-                                            "8. currency": "USD",
-                                            "9. matchScore": "1.000"
-                                        },
-                                        {
-                                            "1. symbol": "NVDA",
-                                            "2. name": "NVIDIA Corp",
-                                            "3. type": "Equity",
-                                            "4. region": "United States",
-                                            "5. marketOpen": "09:15",
-                                            "6. marketClose": "15:30",
-                                            "7. timezone": "UTC+5.5",
-                                            "8. currency": "JPY",
-                                            "9. matchScore": "0.4706"
-                                        }
-                                    ]
-                                }"""*/
-        //parseAndAddSearchResult(keyword, test_json, callback)
 
         val url = "https://www.alphavantage.co/query"
         val args = buildMap<String, String> {
@@ -268,61 +224,64 @@ class StockManager private constructor(context: Context, val db: StockDB) {
             }
 
             override fun onResponse(call: Call, response: Response) {
-
                 response.body?.let {
-                    parseAndAddSearchResult(keyword, it.string(), callback)
+                    val results = parseSearchResults(keyword, it.string())
+                    results.forEach { res ->
+                        updateRegionToCountryCode(res, res.region, object : StockFetchCallback {
+                            override fun onStockFetch(stock: Stock) {
+                                updateStockPriceAndChange(stock, callback)
+                            }
+
+                            override fun onStockFetchFailed() {
+                                Log.e("county code", "couldn't fetch country code")
+                            }
+                        })
+                    }
                 } ?: callback.onStockFetchFailed()
-
-
             }
         })
     }
 
-    fun parseAndAddSearchResult(
-        keyword: String,
-        json: String,
-        callback: StockFetchCallback
-    ) {
-        val obj = JsonParser.parseString(json).asJsonObject
-        val results = obj.get("bestMatches").asJsonArray
+    fun parseSearchResults(keyword: String, json: String): List<Stock> {
 
-        results.forEach { item ->
-            val res = item.asJsonObject
-            val symbol = res.get("1. symbol").asString
-            val description = res.get("2. name").asString
-            val region = res.get("4. region").asString
-            val currency = res.get("8. currency").asString
+        val stocks: MutableList<Stock> = mutableListOf()
 
-            if (description.contains(keyword, ignoreCase = true) || symbol.startsWith(
-                    keyword,
-                    ignoreCase = true
-                )
-            ) {
-                val stockFromSearch = Stock.Builder()
-                    .symbol(symbol)
-                    .region(region)
-                    .description(description)
-                    .currency(currency)
-                    .build()
+        try {
+            val obj = JsonParser.parseString(json).asJsonObject
+            val results = obj.get("bestMatches").asJsonArray
 
-                updateRegionToCountryCode(stockFromSearch, region, object : StockFetchCallback {
-                    override fun onStockFetch(stock: Stock) {
-                        updateStockPriceAndChange(stock, callback)
-                    }
+            results.forEach { item ->
+                val res = item.asJsonObject
+                val symbol = res.get("1. symbol").asString
+                val description = res.get("2. name").asString
+                val region = res.get("4. region").asString
+                val currency = res.get("8. currency").asString
 
-                    override fun onStockFetchFailed() {
-                        Log.e("county code", "couldn't fetch country code")
-                    }
+                if (description.contains(keyword, ignoreCase = true) || symbol.startsWith(
+                        keyword,
+                        ignoreCase = true
+                    )
+                ) {
+                    val stockFromSearch = Stock.Builder()
+                        .symbol(symbol)
+                        .region(region)
+                        .description(description)
+                        .currency(currency)
+                        .build()
 
-                })
+                    stocks.add(stockFromSearch)
+                }
             }
+            return stocks
+
+        } catch (e: IllegalStateException) {
+            return listOf()
+        }catch (e: NullPointerException) {
+            return listOf()
         }
     }
 
-    private fun updateStockPriceAndChange(stock: Stock, callback: StockFetchCallback){
-        //http request to api
-        //https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=NVDA&apikey=sike
-
+    private fun updateStockPriceAndChange(stock: Stock, callback: StockFetchCallback) {
         val url = "https://www.alphavantage.co/query"
         val args = buildMap<String, String> {
             put("function", "TIME_SERIES_DAILY")
@@ -338,83 +297,53 @@ class StockManager private constructor(context: Context, val db: StockDB) {
             override fun onResponse(call: Call, response: Response) {
 
                 response.body?.let {
-                    parseAndAddPrice(stock, it.string(), callback)
+                    val res = parseAndAddPrice(stock, it.string())
+                    res?.let { s ->
+                        callback.onStockFetch(s)
+                    } ?: callback.onStockFetchFailed()
                 } ?: callback.onStockFetchFailed()
             }
         })
-
-
-        /*val nvidia_Str = """{
-    "Meta Data": {
-        "1. Information": "Daily Prices (open, high, low, close) and Volumes",
-        "2. Symbol": "NVDA",
-        "3. Last Refreshed": "2025-02-28",
-        "4. Output Size": "Compact",
-        "5. Time Zone": "US/Eastern"
-    },
-    "Time Series (Daily)": {
-        "2025-02-28": {
-            "1. open": "118.0200",
-            "2. high": "125.0900",
-            "3. low": "116.4000",
-            "4. close": "124.9200",
-            "5. volume": "389091145"
-        },
-        "2025-02-27": {
-            "1. open": "135.0000",
-            "2. high": "135.0100",
-            "3. low": "120.0100",
-            "4. close": "120.1500",
-            "5. volume": "443175846"
-        },
-        "2025-02-26": {
-            "1. open": "129.9850",
-            "2. high": "133.7300",
-            "3. low": "128.4900",
-            "4. close": "131.2800",
-            "5. volume": "322553814"
-        }
-    }
-}"""*/
-        //parseAndAddPrice(stock, nvidia_Str, callback)
-
     }
 
-    fun parseAndAddPrice(stock: Stock, json: String, callback: StockFetchCallback) {
+    fun parseAndAddPrice(stock: Stock, json: String): Stock? {
+        try {
+            val obj = JsonParser.parseString(json).asJsonObject
+            if (obj.has("Error Message")) {
+                return null
+            }
 
-        val obj = JsonParser.parseString(json).asJsonObject
+            if (!obj.has("Meta Data")) {
+                return null
+            }
 
-        if (obj.has("Error Message")){
-            callback.onStockFetchFailed()
-            return
+            val metadata = obj.get("Meta Data").asJsonObject
+            val currDate = metadata.get("3. Last Refreshed").asString
+            val prices = obj.get("Time Series (Daily)").asJsonObject
+
+            if (prices.has(currDate)) {
+                val res = prices.asJsonObject.get(currDate).asJsonObject
+                val open = res.get("1. open").asDouble
+                val close = res.get("4. close").asDouble
+                val volume = res.get("5. volume").asInt
+
+
+                val change = if (open != 0.0) close / open else 0.0
+                val marketCap = close * volume
+
+                stock.volume = volume
+                stock.pricePerShare = close
+                stock.change = change
+                stock.marketCap = marketCap.toInt()
+            }
+        } catch (e: IllegalStateException) {
+            return null
+        }
+        catch (e: NullPointerException) {
+            return null
         }
 
-
-        val metadata = obj.get("Meta Data").asJsonObject
-        val currDate = metadata.get("3. Last Refreshed").asString
-        val prices = obj.get("Time Series (Daily)").asJsonObject
-
-        if (prices.has(currDate)) {
-            val res = prices.asJsonObject.get(currDate).asJsonObject
-            val open = res.get("1. open").asDouble
-            val close = res.get("4. close").asDouble
-            val volume = res.get("5. volume").asInt
-
-
-
-            val change = if (open != 0.0) close / open else 0.0
-            val marketCap = close * volume
-
-            stock.volume = volume
-            stock.pricePerShare = close
-            stock.change = change
-            stock.marketCap = marketCap.toInt()
-
-            callback.onStockFetch(stock)
-            return
-        }
-
-        callback.onStockFetchFailed()
-        return
+        return stock
     }
+
 }
