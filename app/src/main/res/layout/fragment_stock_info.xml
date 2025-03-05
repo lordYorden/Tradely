@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.stock_info.StockInfoFragment">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/info_IMG_stock"
+        android:layout_centerHorizontal="true"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="8dp"
+        android:scaleType="centerCrop"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:srcCompat="@drawable/unavailable_photo" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/info_LBL_symbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:textColor="@color/text_color"
+        android:layout_below="@id/info_IMG_stock"
+        android:textSize="25sp"
+        android:layout_centerHorizontal="true"
+        android:text="NVDA"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/info_LBL_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:layout_below="@id/info_LBL_symbol"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:maxLines="3"
+        android:minLines="1"
+        android:visibility="gone"
+        android:textSize="12sp"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse lacus massa, eleifend et nisl ut, interdum commodo justo. Mauris congue efficitur sem vitae ultricies. Fusce dictum eget orci quis tincidunt. Aliquam laoreet rhoncus " />
+
+    <RelativeLayout
+        android:id="@+id/info_RL_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/info_RL_price">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/info_IMG_change"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="7dp"
+            android:layout_alignParentStart="true"
+            app:srcCompat="@drawable/ic_arrow_up"
+            android:tint="@color/positive"
+            />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/info_LBL_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/info_IMG_change"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/positive"
+            android:text = "1.75%"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/info_IMG_flag"
+            android:layout_width="20dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="8dp"
+            app:srcCompat="@drawable/us"
+            android:layout_toEndOf="@id/info_LBL_change" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/info_RL_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginEnd="8dp"
+        android:layout_below="@id/info_LBL_description">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/info_LBL_price"
+            android:textColor="@color/text_color"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="4dp"
+            android:text = "Price: 137.71$"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/info_IMG_sep"
+            android:layout_toEndOf="@id/info_LBL_price"
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:layout_margin="8dp"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/ic_dot"
+            android:tint="@color/text_color"
+            />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/info_LBL_date"
+            android:textColor="@color/text_color"
+            android:layout_toEndOf="@id/info_IMG_sep"
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text = "Date: 24-03-03"/>
+
+    </RelativeLayout>
+
+    <com.github.mikephil.charting.charts.CandleStickChart
+        android:id="@+id/info_CHART_candle"
+        android:layout_below="@id/info_RL_change"
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="400dp" />
+
+    <RelativeLayout
+        android:id="@+id/info_RL_display_options"
+        android:layout_width="wrap_content"
+        android:layout_margin="2dp"
+        android:layout_below="@id/info_CHART_candle"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/info_TBG_scale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/info_BTN_max"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Max" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/info_BTN_year"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:rippleColor="@color/text_color"
+                android:text="year" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/info_BTN_month"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="month" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/info_BTN_day"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="day" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+<!--        <androidx.appcompat.widget.AppCompatToggleButton-->
+<!--            android:id="@+id/info_BTN_max"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="10sp"-->
+<!--            android:text="max"/>-->
+
+<!--        <androidx.appcompat.widget.AppCompatToggleButton-->
+<!--            android:id="@+id/info_BTN_year"-->
+<!--            android:layout_toEndOf="@id/info_BTN_max"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="10sp"-->
+<!--            android:text="year"/>-->
+
+<!--        <androidx.appcompat.widget.AppCompatToggleButton-->
+<!--            android:id="@+id/info_BTN_day"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_toEndOf="@id/info_BTN_month"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textColor="@color/text_color"-->
+<!--            android:textOn="Day"-->
+<!--            android:textOff="Day"-->
+<!--            android:textSize="10sp" />-->
+
+<!--        <androidx.appcompat.widget.AppCompatToggleButton-->
+<!--            android:id="@+id/info_BTN_month"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_toEndOf="@id/info_BTN_year"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="10sp"-->
+<!--            android:text="month"/>-->
+
+    </RelativeLayout>
+
+</RelativeLayout>

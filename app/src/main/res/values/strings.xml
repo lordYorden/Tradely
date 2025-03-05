@@ -10,4 +10,5 @@
     <string name="unfollow">Unfollow</string>
     <string name="edit">edit</string>
     <string name="trade">Trade</string>
+    <string name="stock_info">Stock Info</string>
 </resources>

@@ -16,4 +16,9 @@
         android:icon="@drawable/ic_stock_explore"
         android:title="@string/explore_stocks" />
 
+    <item
+        android:id="@+id/navigation_stock_info"
+        android:icon="@drawable/ic_stock_explore"
+        android:title="@string/stock_info" />
+
 </menu>

@@ -22,4 +22,10 @@
         android:name="dev.lordyorden.tradely.ui.explore.ExploreStocksFragment"
         android:label="@string/explore_stocks"
         tools:layout="@layout/fragment_explore_stocks" />
+
+    <fragment
+        android:id="@+id/navigation_stock_info"
+        android:name="dev.lordyorden.tradely.ui.stock_info.StockInfoFragment"
+        android:label="@string/stock_info"
+        tools:layout="@layout/fragment_stock_info" />
 </navigation>
