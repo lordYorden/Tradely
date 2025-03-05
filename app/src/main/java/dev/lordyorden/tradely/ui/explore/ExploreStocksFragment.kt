@@ -69,10 +69,8 @@ class ExploreStocksFragment : Fragment() {
         })
 
         viewModel.stocks.observe(viewLifecycleOwner) { stocks ->
-            if(stocks.isNotEmpty()) {
-                adapter.stocks = stocks
-                adapter.notifyDataSetChanged()
-            }
+            adapter.stocks = stocks
+            adapter.notifyDataSetChanged()
         }
         return root
     }

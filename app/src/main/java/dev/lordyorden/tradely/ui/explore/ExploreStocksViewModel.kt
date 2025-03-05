@@ -32,7 +32,8 @@ class ExploreStocksViewModel : ViewModel() {
     }
 
     fun searchStocks(symbol: String){
-        setStocks(stockManager.stocks.filter { stock -> stock.symbol.startsWith(symbol.uppercase(Locale.getDefault())) })
+        val stocks = stockManager.stocks.filter { stock -> stock.symbol.startsWith(symbol, ignoreCase = true) || stock.description.contains(symbol, ignoreCase = true)}
+        setStocks(stocks)
     }
 
     fun deepSearch(keyword: String){
