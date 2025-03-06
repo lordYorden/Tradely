@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.stock_info.buy.BuyStockFragment">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/buy_IMG_stock"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:scaleType="centerCrop"
+                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+                app:srcCompat="@drawable/unavailable_photo" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/buy_LBL_symbol"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_IMG_stock"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="8dp"
+                android:text="@string/no_stock_selected"
+                android:textColor="@color/text_color"
+                android:textSize="25sp" />
+
+            <RelativeLayout
+                android:id="@+id/buy_RL_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_RL_price"
+                android:layout_centerHorizontal="true">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/buy_IMG_change"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginTop="7dp"
+                    android:tint="@color/text_color"
+                    app:srcCompat="@drawable/ic_arrow_up" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/buy_LBL_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/buy_IMG_change"
+                    android:text="@string/missing_data"
+                    android:textColor="@color/text_color" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/info_IMG_flag"
+                    android:layout_width="20dp"
+                    android:layout_height="15dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_toEndOf="@id/buy_LBL_change"
+                    app:srcCompat="@drawable/us" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/buy_RL_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_LBL_symbol"
+                android:layout_centerHorizontal="true"
+                android:layout_marginEnd="8dp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/buy_LBL_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="4dp"
+                    android:text="@string/default_price"
+                    android:textColor="@color/text_color" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/buy_IMG_sep"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:layout_centerVertical="true"
+                    android:layout_margin="8dp"
+                    android:layout_toEndOf="@id/buy_LBL_price"
+                    android:tint="@color/text_color"
+                    app:srcCompat="@drawable/ic_dot" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/buy_LBL_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/buy_IMG_sep"
+                    android:text="@string/missing_date_data"
+                    android:textColor="@color/text_color" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="16dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/buy_LBL_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity=""
+                android:layout_marginStart="16dp"
+                android:text="Amount to buy"
+                android:textColor="@color/text_color"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.slider.RangeSlider
+                android:theme="@style/Widget.Material3.Slider"
+                style="@style/Widget.Material3.Slider"
+                android:id="@+id/buy_SLD_amount"
+                app:labelBehavior="floating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_LBL_amount"
+                android:stepSize="1"
+                android:valueFrom="1"
+                android:valueTo="100"
+                app:tickColorActive="@color/teal_200"
+                app:tickColorInactive="@color/text_color"
+                app:trackColorActive="@color/teal_200"
+                app:trackColorInactive="@color/text_color"
+                tools:value="50" />
+
+            <RelativeLayout
+                android:id="@+id/buy_RL_shares"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_SLD_amount">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/buy_LBL_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity=""
+                    android:layout_marginStart="16dp"
+                    android:text="Num Shares"
+                    android:textColor="@color/text_color"
+                    android:textSize="20sp" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/buy_LBL_num_shares"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity=""
+                    android:layout_marginEnd="16dp"
+                    android:text="50"
+                    android:textColor="@color/text_color"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/buy_RL_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/buy_RL_shares">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/buy_LBL_total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_gravity=""
+                    android:layout_marginStart="16dp"
+                    android:text="Total Price"
+                    android:textColor="@color/text_color"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/buy_LBL_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_gravity=""
+                    android:layout_marginEnd="16dp"
+                    android:text="136$"
+                    android:textColor="@color/text_color"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buy_BTN_pay"
+                android:layout_below="@id/buy_RL_total"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pay 136$"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/teal_200"/>
+
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</RelativeLayout>

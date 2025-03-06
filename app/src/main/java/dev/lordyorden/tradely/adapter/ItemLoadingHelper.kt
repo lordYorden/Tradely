@@ -1,12 +1,10 @@
 package dev.lordyorden.tradely.adapter
 
-import android.graphics.Region
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
-
 import dev.lordyorden.tradely.R
 import dev.lordyorden.tradely.models.Profile
 import dev.lordyorden.tradely.utilities.ImageLoader
@@ -69,7 +67,7 @@ object ItemLoadingHelper {
     fun fixedLastMargin(params: RecyclerView.LayoutParams, position: Int, size: Int): RecyclerView.LayoutParams{
         when(position){
             size - 1 -> {
-                params.bottomMargin = 250 // last item bottom margin
+                params.bottomMargin = 400 // last item bottom margin
             }
             else -> {
                 params.bottomMargin = 0 // last item bottom margin

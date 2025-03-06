@@ -15,7 +15,7 @@ import dev.lordyorden.tradely.adapter.StockAdapter
 import dev.lordyorden.tradely.databinding.FragmentExploreStocksBinding
 import dev.lordyorden.tradely.interfaces.stock.StockCallback
 import dev.lordyorden.tradely.models.Stock
-import dev.lordyorden.tradely.ui.stock_info.StockViewModel
+import dev.lordyorden.tradely.ui.stock_info.host.StockViewModel
 
 class ExploreStocksFragment : Fragment() {
 

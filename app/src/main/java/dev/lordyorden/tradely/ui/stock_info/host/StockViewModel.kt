@@ -1,4 +1,4 @@
-package dev.lordyorden.tradely.ui.stock_info
+package dev.lordyorden.tradely.ui.stock_info.host
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

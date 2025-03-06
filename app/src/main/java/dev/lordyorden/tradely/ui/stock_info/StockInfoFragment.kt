@@ -22,7 +22,8 @@ import dev.lordyorden.tradely.adapter.ItemLoadingHelper
 import dev.lordyorden.tradely.databinding.FragmentStockInfoBinding
 import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.models.StockParser
-import dev.lordyorden.tradely.ui.home.HomeFragment
+import dev.lordyorden.tradely.ui.stock_info.buy.BuyStockFragment
+import dev.lordyorden.tradely.ui.stock_info.host.StockViewModel
 import dev.lordyorden.tradely.utilities.ImageLoader
 import java.util.Locale
 
@@ -58,7 +59,7 @@ class StockInfoFragment : Fragment() {
         binding.infoBTNBuy.setOnClickListener{
             parentFragmentManager
                 .beginTransaction()
-                .replace(R.id.host_FL_host, HomeFragment())
+                .replace(R.id.host_FL_host, BuyStockFragment())
                 .commit()
         }
 
@@ -79,12 +80,6 @@ class StockInfoFragment : Fragment() {
                             curr
                         )
                     }
-
-//                    binding.infoLBLPrice.text = buildString {
-//                        append("Price: ")
-//                        append(it.y)
-//                        append("$")
-//                    }
 
                     binding.infoLBLDate.text = buildString {
                         append("Date: ")

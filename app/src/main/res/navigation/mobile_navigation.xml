@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_stock_info"
-        android:name="dev.lordyorden.tradely.ui.stock_info.HostFragment"
+        android:name="dev.lordyorden.tradely.ui.stock_info.host.HostFragment"
         android:label="@string/stock_info"
         tools:layout="@layout/fragment_stock_info" />
 </navigation>
