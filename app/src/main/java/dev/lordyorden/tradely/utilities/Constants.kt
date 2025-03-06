@@ -5,7 +5,7 @@ import com.google.firebase.firestore.SetOptions
 class Constants {
     object DB {
         const val MESSAGE_REF = "message"
-        const val MOVIE_REF = "movies"
+        const val PRICES_REF = "prices"
         const val USERS_REF = "users"
         const val STOCKS_REF = "stocks"
         const val PROFILES_REF = "profiles"

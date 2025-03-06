@@ -11,4 +11,6 @@
     <string name="edit">edit</string>
     <string name="trade">Trade</string>
     <string name="stock_info">Stock Info</string>
+    <string name="buy_stock">Buy Stock</string>
+    <string name="buy">Buy</string>
 </resources>

@@ -8,17 +8,23 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.lordyorden.tradely.adapter.StockAdapter
 import dev.lordyorden.tradely.databinding.FragmentExploreStocksBinding
 import dev.lordyorden.tradely.interfaces.stock.StockCallback
 import dev.lordyorden.tradely.models.Stock
+import dev.lordyorden.tradely.ui.stock_info.StockViewModel
 
 class ExploreStocksFragment : Fragment() {
 
     private var _binding: FragmentExploreStocksBinding? = null
     private lateinit var adapter: StockAdapter
+    private val stockVM: StockViewModel by activityViewModels()
+
+    private val viewModel: ExploreStocksViewModel by viewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -30,9 +36,6 @@ class ExploreStocksFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel =
-            ViewModelProvider(this).get(ExploreStocksViewModel::class.java)
-
         _binding = FragmentExploreStocksBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -42,6 +45,7 @@ class ExploreStocksFragment : Fragment() {
         adapter.stockCallback  = object : StockCallback {
             override fun onEditClicked(stock: Stock, position: Int) {
                 Toast.makeText(context, "Edit clicked on ${stock.symbol}", Toast.LENGTH_SHORT).show()
+                stockVM.selectStock(stock)
             }
         }
 

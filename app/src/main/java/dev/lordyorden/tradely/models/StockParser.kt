@@ -7,7 +7,7 @@ import com.google.gson.JsonParser
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class StockParser {
+object StockParser {
 
     val baseDate: LocalDate = LocalDate.of(2020, 1, 1)
 

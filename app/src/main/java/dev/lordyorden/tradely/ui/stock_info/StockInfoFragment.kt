@@ -7,7 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.github.mikephil.charting.charts.CandleStickChart
 import com.github.mikephil.charting.data.CandleData
 import com.github.mikephil.charting.data.CandleDataSet
@@ -17,19 +18,30 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import dev.lordyorden.tradely.R
+import dev.lordyorden.tradely.adapter.ItemLoadingHelper
 import dev.lordyorden.tradely.databinding.FragmentStockInfoBinding
+import dev.lordyorden.tradely.models.Stock
+import dev.lordyorden.tradely.models.StockParser
+import dev.lordyorden.tradely.ui.home.HomeFragment
+import dev.lordyorden.tradely.utilities.ImageLoader
+import java.util.Locale
 
 
 class StockInfoFragment : Fragment() {
-
     private lateinit var binding: FragmentStockInfoBinding
     private lateinit var chart: CandleStickChart
-    private lateinit var viewM: StockInfoViewModel
+    private val viewM: StockInfoViewModel by viewModels()
     private lateinit var dataSet: CandleDataSet
     private lateinit var valueFormatter: ValueFormatter
+    private val stockVM: StockViewModel by activityViewModels()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        initDataSet()
+    }
 
     private fun initDataSet() {
-        val entries: MutableList<CandleEntry> = viewM.getEntriesMonthly().toMutableList()
+        val entries: MutableList<CandleEntry> = mutableListOf()
         dataSet = CandleDataSet(entries, "stock")
     }
 
@@ -40,12 +52,45 @@ class StockInfoFragment : Fragment() {
     ): View {
         binding = FragmentStockInfoBinding.inflate(inflater, container, false)
         chart = binding.infoCHARTCandle
-        viewM = ViewModelProvider(this)[StockInfoViewModel::class.java]
-        valueFormatter = DateAxisFormater(viewM.stockParser.baseDate)
-        initDataSet()
+        valueFormatter = DateAxisFormater(StockParser.baseDate)
         initChart()
 
+        binding.infoBTNBuy.setOnClickListener{
+            parentFragmentManager
+                .beginTransaction()
+                .replace(R.id.host_FL_host, HomeFragment())
+                .commit()
+        }
+
+        stockVM.selectedStock.observe(viewLifecycleOwner){ stock->
+            viewM.setStockInfo(stock)
+        }
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        renderNewStock()
+    }
+
+    private fun renderNewStock() {
+        viewM.currentStock ?: return
+
+        val currentStock:Stock = viewM.currentStock!!
+
+        binding.infoLBLSymbol.text = currentStock.symbol
+        binding.infoLBLChange.text = String.format(Locale.getDefault(), "%.2f%%", currentStock.change)
+
+        val symbol = currentStock.symbol ?: ""
+        ImageLoader.getInstance().loadImage("https://assets.parqet.com/logos/symbol/$symbol?format=jpg", binding.infoIMGStock)
+        ItemLoadingHelper.loadFlag(currentStock.region, binding.infoIMGFlag)
+
+        presentMonthlyData()
+    }
+
+    private fun presentMonthlyData(){
+        val entries = viewM.monthly
+        setNewEntries(entries)
     }
 
     private fun initChart() {
@@ -67,9 +112,7 @@ class StockInfoFragment : Fragment() {
             }
 
             override fun onNothingSelected() {
-                binding.infoLBLPrice.text = buildString {
-                    append("Price: 137.71\$")
-                }
+                //pass
             }
 
         })
@@ -77,30 +120,29 @@ class StockInfoFragment : Fragment() {
             if (isChecked) {
                 when (checkedId) {
                     R.id.info_BTN_month -> {
-                        val entries = viewM.getEntriesDaily()
+                        val entries = viewM.daily
                         setNewEntries(entries, "MM-dd")
                     }
 
                     R.id.info_BTN_year -> {
-                        val entries = viewM.getEntriesWeekly()
+                        val entries = viewM.weekly
                         setNewEntries(entries, "MM-dd")
                     }
 
                     R.id.info_BTN_max -> {
-                        val entries = viewM.getEntriesMonthly()
-                        setNewEntries(entries)
+                        presentMonthlyData()
+                    }
+
+                    R.id.info_BTN_day -> {
+                        val entries = viewM.hourly
+                        setNewEntries(entries, "dd")
                     }
                     else -> {
-                        val entries = viewM.getEntriesMonthly()
-                        setNewEntries(entries)
+                        presentMonthlyData()
                     }
                 }
             }
         }
-        val data = CandleData(dataSet)
-        chart.data = data
-        chart.invalidate()
-        chart.fitScreen()
     }
 
     private fun configChart() {
@@ -127,12 +169,23 @@ class StockInfoFragment : Fragment() {
     }
 
     private fun setNewEntries(entries: List<CandleEntry>, format: String = "yy-MM-dd"){
-        dataSet.clear()
+
+        if (entries.isEmpty()) {
+            chart.clear()
+            return
+        }
+
+        if(dataSet.entryCount > 0)
+            dataSet.clear()
+
         entries.forEach{ entry ->
             dataSet.addEntry(entry)
         }
 
-        valueFormatter = DateAxisFormater(viewM.stockParser.baseDate, format)
+        val data = CandleData(dataSet)
+        chart.data = data
+
+        valueFormatter = DateAxisFormater(StockParser.baseDate, format)
         chart.xAxis.valueFormatter = valueFormatter
         chart.notifyDataSetChanged()
         chart.invalidate()
@@ -140,6 +193,6 @@ class StockInfoFragment : Fragment() {
         chart.xAxis.axisMaximum = entries.last().x
         chart.moveViewToX(entries.last().x)
         chart.fitScreen()
-    }
+}
 
 }

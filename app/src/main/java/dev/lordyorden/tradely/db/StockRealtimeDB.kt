@@ -1,6 +1,7 @@
 package dev.lordyorden.tradely.db
 
 import android.util.Log
+import com.github.mikephil.charting.data.CandleEntry
 import com.google.firebase.Firebase
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -13,6 +14,8 @@ import com.google.firebase.database.getValue
 import dev.lordyorden.tradely.interfaces.stock.StockChangesCallback
 import dev.lordyorden.tradely.interfaces.stock.StockDB
 import dev.lordyorden.tradely.interfaces.stock.StockFetchCallback
+import dev.lordyorden.tradely.interfaces.stock.StockPriceUpdateCallback
+import dev.lordyorden.tradely.models.PriceEntry
 import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.utilities.Constants
 
@@ -30,6 +33,57 @@ class StockRealtimeDB : StockDB {
                     "failed to update ${stock.symbol} with error: ${e.localizedMessage}"
                 )
             }
+    }
+
+    override fun updateStockPrices(symbol: String, prices: List<CandleEntry>, type: String) {
+        val stockRef = ref.child(symbol).child(Constants.DB.PRICES_REF).child(type)
+        stockRef.setValue(prices)
+            .addOnFailureListener { e ->
+                Log.e(
+                    "Update stock prices",
+                    "failed to update $symbol with error: ${e.localizedMessage}"
+                )
+            }
+    }
+
+    override fun registerUpdateOnPrice(symbol: String, callback: StockPriceUpdateCallback) {
+        ref.child(symbol).child(Constants.DB.PRICES_REF)
+            .addChildEventListener(object : ChildEventListener{
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    val prices = snapshot.getValue<List<PriceEntry>>()
+                    val type = snapshot.key
+
+                    prices?.let {
+                        type?.let {
+                            callback.onPricesUpdate(prices, type)
+                        }
+                    }
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    val prices = snapshot.getValue<List<CandleEntry>>()
+                    val type = snapshot.key
+
+                    prices?.let {
+                        type?.let {
+                            callback.onPricesUpdate(prices, type)
+                        }
+                    }
+                }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    //pass
+                }
+
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
+                    //pass
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("stock price", "failed to fetch, error: ${error.toException()}")
+                }
+
+            })
     }
 
     override fun getStock(symbol: String, fetchCallback: StockFetchCallback) {

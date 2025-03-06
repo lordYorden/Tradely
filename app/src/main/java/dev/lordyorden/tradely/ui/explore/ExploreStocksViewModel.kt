@@ -13,7 +13,7 @@ import java.util.Locale
 
 class ExploreStocksViewModel : ViewModel() {
 
-    private val stockManager = StockManager(StockRealtimeDB())
+    private val stockManager = StockManager.getInstance()
 
     private val _stocks = MutableLiveData<List<Stock>>(listOf())
     val stocks: LiveData<List<Stock>>
@@ -25,6 +25,8 @@ class ExploreStocksViewModel : ViewModel() {
                 setStocks(stockManager.stocks)
             }
         })
+
+        //stockManager.uploadTestPrice()
     }
 
     fun setStocks(stocks: List<Stock>) {

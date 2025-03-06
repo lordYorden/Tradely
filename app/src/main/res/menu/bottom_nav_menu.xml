@@ -18,7 +18,7 @@
 
     <item
         android:id="@+id/navigation_stock_info"
-        android:icon="@drawable/ic_stock_explore"
-        android:title="@string/stock_info" />
+        android:icon="@drawable/ic_buy"
+        android:title="@string/buy_stock" />
 
 </menu>

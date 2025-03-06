@@ -1,5 +1,7 @@
 package dev.lordyorden.tradely.models
 
+import com.github.mikephil.charting.data.CandleEntry
+
 data class Stock private constructor(
     val profilePic: String,
     var symbol: String,
@@ -9,7 +11,11 @@ data class Stock private constructor(
     var marketCap: Int,
     var region: String,
     var currency: String,
-    var description: String
+    var description: String,
+    var daily: MutableList<CandleEntry>,
+    var hourly: MutableList<CandleEntry>,
+    var monthly: MutableList<CandleEntry>,
+    var weekly: MutableList<CandleEntry>
 ){
     constructor(): this(
         profilePic = "",
@@ -20,7 +26,11 @@ data class Stock private constructor(
         marketCap = 0,
         region = "",
         currency = "",
-        description = ""
+        description = "",
+        daily = mutableListOf(),
+        hourly = mutableListOf(),
+        monthly = mutableListOf(),
+        weekly = mutableListOf()
     )
 
     class Builder {
@@ -33,6 +43,10 @@ data class Stock private constructor(
         private var currency: String = ""
         private var profilePic: String = ""
         private var description: String = ""
+        private var daily: MutableList<CandleEntry> = mutableListOf()
+        private var hourly: MutableList<CandleEntry> = mutableListOf()
+        private var monthly: MutableList<CandleEntry> = mutableListOf()
+        private var weekly: MutableList<CandleEntry> = mutableListOf()
 
         fun symbol(symbol: String) = apply { this.symbol = symbol }
         fun pricePerShare(pricePerShare: Double) = apply { this.pricePerShare = pricePerShare }
@@ -53,7 +67,11 @@ data class Stock private constructor(
             marketCap = marketCap,
             region = region,
             currency = currency,
-            description = description
+            description = description,
+            daily = daily,
+            hourly = hourly,
+            monthly = monthly,
+            weekly = weekly,
         )
     }
 }

@@ -170,38 +170,14 @@
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-<!--        <androidx.appcompat.widget.AppCompatToggleButton-->
-<!--            android:id="@+id/info_BTN_max"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textSize="10sp"-->
-<!--            android:text="max"/>-->
-
-<!--        <androidx.appcompat.widget.AppCompatToggleButton-->
-<!--            android:id="@+id/info_BTN_year"-->
-<!--            android:layout_toEndOf="@id/info_BTN_max"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textSize="10sp"-->
-<!--            android:text="year"/>-->
-
-<!--        <androidx.appcompat.widget.AppCompatToggleButton-->
-<!--            android:id="@+id/info_BTN_day"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_toEndOf="@id/info_BTN_month"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textColor="@color/text_color"-->
-<!--            android:textOn="Day"-->
-<!--            android:textOff="Day"-->
-<!--            android:textSize="10sp" />-->
-
-<!--        <androidx.appcompat.widget.AppCompatToggleButton-->
-<!--            android:id="@+id/info_BTN_month"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_toEndOf="@id/info_BTN_year"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textSize="10sp"-->
-<!--            android:text="month"/>-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/info_BTN_buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/info_TBG_scale"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/teal_200"
+            android:text="@string/buy"/>
 
     </RelativeLayout>
 

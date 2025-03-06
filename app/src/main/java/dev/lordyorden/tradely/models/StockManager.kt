@@ -1,11 +1,13 @@
 package dev.lordyorden.tradely.models
 
 import android.util.Log
+import com.github.mikephil.charting.data.CandleEntry
 import com.google.gson.JsonParser
 import dev.lordyorden.tradely.BuildConfig
 import dev.lordyorden.tradely.interfaces.stock.StockChangesCallback
 import dev.lordyorden.tradely.interfaces.stock.StockDB
 import dev.lordyorden.tradely.interfaces.stock.StockFetchCallback
+import dev.lordyorden.tradely.interfaces.stock.StockPriceUpdateCallback
 import dev.lordyorden.tradely.interfaces.stock.StockUpdateCallback
 import dev.lordyorden.tradely.utilities.HttpRequestHandler
 import okhttp3.Call
@@ -13,7 +15,25 @@ import okhttp3.Callback
 import okhttp3.Response
 import java.io.IOException
 
-class StockManager(private val db: StockDB) {
+class StockManager private constructor(private val db: StockDB) {
+
+    companion object {
+
+        @Volatile
+        private var instance: StockManager? = null
+
+        fun getInstance(): StockManager {
+            return instance
+                ?: throw IllegalStateException("StockManager must be initialized by calling init(db) before use")
+        }
+
+        fun init(db: StockDB): StockManager {
+            return instance ?: synchronized(this) {
+                instance ?: StockManager(db).also { instance = it }
+            }
+        }
+
+    }
 
     val stocks: MutableList<Stock> = mutableListOf()
 
@@ -40,10 +60,42 @@ class StockManager(private val db: StockDB) {
 
             override fun onStockAdded(stock: Stock) {
                 stocks.add(stock)
+
+                db.registerUpdateOnPrice(stock.symbol, object : StockPriceUpdateCallback{
+                    override fun onPricesUpdate(prices: List<CandleEntry>, type: String) {
+                        when(type){
+                            "monthly" -> {
+                                stock.monthly = prices.toMutableList()
+                            }
+
+                            "weekly" -> {
+                                stock.weekly = prices.toMutableList()
+                            }
+
+                            "daily" -> {
+                                stock.daily = prices.toMutableList()
+                            }
+
+                            else -> Log.e("price update", "Price update on stock ${stock.symbol} with invalid type $type")
+                        }
+                        callback.updateStocks()
+                    }
+                })
                 callback.updateStocks()
             }
 
         })
+    }
+
+    fun uploadTestPrice(){
+        StockParser.parseWeeklyData(TestDataProvider.getWeeklyData())
+            ?.let { db.updateStockPrices("IBM", it, "weekly") }
+
+        StockParser.parseMonthlyData(TestDataProvider.getMonthlyData())
+            ?.let { db.updateStockPrices("IBM", it, "monthly") }
+
+        StockParser.parseDailyData(TestDataProvider.getDailyData())
+            ?.let { db.updateStockPrices("IBM", it, "daily") }
     }
 
     private fun generateStocks(): List<Stock> {
