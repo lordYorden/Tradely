@@ -10,7 +10,6 @@ import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.lordyorden.tradely.adapter.StockAdapter
 import dev.lordyorden.tradely.databinding.FragmentExploreStocksBinding

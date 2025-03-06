@@ -67,11 +67,13 @@ class StockAdapter(
                     append("$")
                 }
 
-                binding.stockLBLPrice.text = buildString {
-                    append("Price: ")
-                    append(pricePerShare)
-                    append("$")
-                }
+                ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.stockLBLPrice, pricePerShare, currency)
+
+//                binding.stockLBLPrice.text = buildString {
+//                    append("Price: ")
+//                    append(pricePerShare)
+//                    append("$")
+//                }
 
                 binding.stockLBLChange.text = String.format(Locale.getDefault(), "%.2f%%", change)
 

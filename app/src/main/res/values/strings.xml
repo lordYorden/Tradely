@@ -13,4 +13,12 @@
     <string name="stock_info">Stock Info</string>
     <string name="buy_stock">Buy Stock</string>
     <string name="buy">Buy</string>
+    <string name="max">Max</string>
+    <string name="year">year</string>
+    <string name="month">month</string>
+    <string name="day">day</string>
+    <string name="missing_date_data">Date: No Data Avalible</string>
+    <string name="default_price">Price: 0$</string>
+    <string name="missing_data">Missing Data</string>
+    <string name="no_stock_selected">No Stock Selected</string>
 </resources>

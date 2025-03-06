@@ -1,5 +1,6 @@
 package dev.lordyorden.tradely.adapter
 
+import android.graphics.Region
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
@@ -9,6 +10,8 @@ import androidx.viewbinding.ViewBinding
 import dev.lordyorden.tradely.R
 import dev.lordyorden.tradely.models.Profile
 import dev.lordyorden.tradely.utilities.ImageLoader
+import java.util.Currency
+import java.util.Locale
 
 object ItemLoadingHelper {
     fun setChangeColorAndArrow(binding: ViewBinding, label: TextView, icon: ImageView,  change: Double) {
@@ -26,6 +29,22 @@ object ItemLoadingHelper {
             label.setTextColor(negativeColor)
             icon.setImageResource(arrowDown)
             icon.setColorFilter(negativeColor)
+        }
+    }
+
+    fun updatePriceWithRegionalCurrency(priceView: TextView, price: Double, currency: String){
+        var curr: Currency = Currency.getInstance("USD")
+
+        try {
+            curr = Currency.getInstance(currency)
+        }catch (e: Exception){
+            //pass
+        }
+
+        priceView.text = buildString {
+            append("price: ")
+            append(String.format(Locale.getDefault(), "%.2f ", price))
+            append(curr.symbol)
         }
     }
 

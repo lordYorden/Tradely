@@ -1,15 +1,12 @@
 package dev.lordyorden.tradely.ui.stock_info
 
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
 import dev.lordyorden.tradely.R
 import dev.lordyorden.tradely.databinding.FragmentHostBinding
-import dev.lordyorden.tradely.ui.explore.ExploreStocksViewModel
 
 class HostFragment : Fragment() {
 

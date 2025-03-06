@@ -4,12 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import dev.lordyorden.tradely.db.StockRealtimeDB
 import dev.lordyorden.tradely.interfaces.stock.StockFetchCallback
 import dev.lordyorden.tradely.interfaces.stock.StockUpdateCallback
 import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.models.StockManager
-import java.util.Locale
 
 class ExploreStocksViewModel : ViewModel() {
 

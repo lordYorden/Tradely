@@ -80,8 +80,16 @@ class StockInfoFragment : Fragment() {
 
         binding.infoLBLSymbol.text = currentStock.symbol
         binding.infoLBLChange.text = String.format(Locale.getDefault(), "%.2f%%", currentStock.change)
+        ItemLoadingHelper.setChangeColorAndArrow(binding, binding.infoLBLChange, binding.infoIMGChange, currentStock.change)
 
-        val symbol = currentStock.symbol ?: ""
+        ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.infoLBLPrice, currentStock.pricePerShare, currentStock.currency)
+//        binding.infoLBLPrice.text = buildString {
+//            append("Price: ")
+//            append(currentStock.pricePerShare)
+//            append("$")
+//        }
+
+        val symbol = currentStock.symbol
         ImageLoader.getInstance().loadImage("https://assets.parqet.com/logos/symbol/$symbol?format=jpg", binding.infoIMGStock)
         ItemLoadingHelper.loadFlag(currentStock.region, binding.infoIMGFlag)
 
@@ -97,16 +105,23 @@ class StockInfoFragment : Fragment() {
         configChart()
         chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
             override fun onValueSelected(e: Entry?, h: Highlight?) {
-                h?.let {
-                    binding.infoLBLPrice.text = buildString {
-                        append("Price: ")
-                        append(it.y)
-                        append("$")
+                h?.let {high ->
+
+                    viewM.currentStock?.currency?.let { curr ->
+                        ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.infoLBLPrice, high.y.toDouble(),
+                            curr
+                        )
                     }
+
+//                    binding.infoLBLPrice.text = buildString {
+//                        append("Price: ")
+//                        append(it.y)
+//                        append("$")
+//                    }
 
                     binding.infoLBLDate.text = buildString {
                         append("Date: ")
-                        append(valueFormatter.getFormattedValue(it.x))
+                        append(valueFormatter.getFormattedValue(high.x))
                     }
                 }
             }
