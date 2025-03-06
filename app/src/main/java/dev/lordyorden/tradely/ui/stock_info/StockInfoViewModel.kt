@@ -3,6 +3,8 @@ package dev.lordyorden.tradely.ui.stock_info
 import androidx.lifecycle.ViewModel
 import com.github.mikephil.charting.data.CandleEntry
 import dev.lordyorden.tradely.models.Stock
+import dev.lordyorden.tradely.models.StockParser
+import dev.lordyorden.tradely.models.TestDataProvider
 
 class StockInfoViewModel : ViewModel() {
 
@@ -28,6 +30,10 @@ class StockInfoViewModel : ViewModel() {
 
         hourly.clear()
         hourly.addAll(stock.hourly)
+    }
+
+    fun getEntriesHourly() : List<CandleEntry>{
+        return StockParser.parseHourlyData(TestDataProvider.getHourlyData())?.toMutableList() ?: mutableListOf()
     }
 
 //    fun getEntriesMonthly(): List<CandleEntry>{

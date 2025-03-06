@@ -52,7 +52,7 @@ class StockInfoFragment : Fragment() {
     ): View {
         binding = FragmentStockInfoBinding.inflate(inflater, container, false)
         chart = binding.infoCHARTCandle
-        valueFormatter = DateAxisFormater(StockParser.baseDate)
+        valueFormatter = DateAxisFormater(StockParser.baseDate.toLocalDate())
         initChart()
 
         binding.infoBTNBuy.setOnClickListener{
@@ -66,6 +66,66 @@ class StockInfoFragment : Fragment() {
             viewM.setStockInfo(stock)
         }
         return binding.root
+    }
+
+    private fun initChart() {
+        configChart()
+        chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
+            override fun onValueSelected(e: Entry?, h: Highlight?) {
+                h?.let {high ->
+
+                    viewM.currentStock?.currency?.let { curr ->
+                        ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.infoLBLPrice, high.y.toDouble(),
+                            curr
+                        )
+                    }
+
+//                    binding.infoLBLPrice.text = buildString {
+//                        append("Price: ")
+//                        append(it.y)
+//                        append("$")
+//                    }
+
+                    binding.infoLBLDate.text = buildString {
+                        append("Date: ")
+                        append(valueFormatter.getFormattedValue(high.x))
+                    }
+                }
+            }
+
+            override fun onNothingSelected() {
+                //pass
+            }
+
+        })
+
+        binding.infoTBGScale.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                when (checkedId) {
+                    R.id.info_BTN_month -> {
+                        val entries = viewM.daily
+                        setNewEntries(entries, "MM-dd")
+                    }
+
+                    R.id.info_BTN_year -> {
+                        val entries = viewM.weekly
+                        setNewEntries(entries, "MM-dd")
+                    }
+
+                    R.id.info_BTN_max -> {
+                        presentMonthlyData()
+                    }
+
+                    R.id.info_BTN_day -> {
+                        val entries = viewM.getEntriesHourly()
+                        setNewEntries(entries, "dd HH:mm:ss")
+                    }
+                    else -> {
+                        presentMonthlyData()
+                    }
+                }
+            }
+        }
     }
 
     override fun onResume() {
@@ -99,65 +159,6 @@ class StockInfoFragment : Fragment() {
     private fun presentMonthlyData(){
         val entries = viewM.monthly
         setNewEntries(entries)
-    }
-
-    private fun initChart() {
-        configChart()
-        chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
-            override fun onValueSelected(e: Entry?, h: Highlight?) {
-                h?.let {high ->
-
-                    viewM.currentStock?.currency?.let { curr ->
-                        ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.infoLBLPrice, high.y.toDouble(),
-                            curr
-                        )
-                    }
-
-//                    binding.infoLBLPrice.text = buildString {
-//                        append("Price: ")
-//                        append(it.y)
-//                        append("$")
-//                    }
-
-                    binding.infoLBLDate.text = buildString {
-                        append("Date: ")
-                        append(valueFormatter.getFormattedValue(high.x))
-                    }
-                }
-            }
-
-            override fun onNothingSelected() {
-                //pass
-            }
-
-        })
-        binding.infoTBGScale.addOnButtonCheckedListener { _, checkedId, isChecked ->
-            if (isChecked) {
-                when (checkedId) {
-                    R.id.info_BTN_month -> {
-                        val entries = viewM.daily
-                        setNewEntries(entries, "MM-dd")
-                    }
-
-                    R.id.info_BTN_year -> {
-                        val entries = viewM.weekly
-                        setNewEntries(entries, "MM-dd")
-                    }
-
-                    R.id.info_BTN_max -> {
-                        presentMonthlyData()
-                    }
-
-                    R.id.info_BTN_day -> {
-                        val entries = viewM.hourly
-                        setNewEntries(entries, "dd")
-                    }
-                    else -> {
-                        presentMonthlyData()
-                    }
-                }
-            }
-        }
     }
 
     private fun configChart() {
@@ -200,12 +201,17 @@ class StockInfoFragment : Fragment() {
         val data = CandleData(dataSet)
         chart.data = data
 
-        valueFormatter = DateAxisFormater(StockParser.baseDate, format)
+        valueFormatter = if (format.contains("HH:mm:ss"))
+            DateTimeAxisFormater(StockParser.baseDate, format)
+        else{
+            DateAxisFormater(StockParser.baseDate.toLocalDate(), format)
+        }
+
         chart.xAxis.valueFormatter = valueFormatter
         chart.notifyDataSetChanged()
-        chart.invalidate()
         chart.xAxis.axisMinimum = entries.first().x
         chart.xAxis.axisMaximum = entries.last().x
+        chart.invalidate()
         chart.moveViewToX(entries.last().x)
         chart.fitScreen()
 }

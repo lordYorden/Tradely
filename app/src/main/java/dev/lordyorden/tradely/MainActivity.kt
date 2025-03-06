@@ -1,11 +1,12 @@
 package dev.lordyorden.tradely
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -23,14 +24,19 @@ class MainActivity : AppCompatActivity() {
 
         val navView: BottomNavigationView = binding.navView
 
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            supportActionBar?.hide()
+            navView.visibility = View.GONE
+        }
+
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.navigation_home, R.id.navigation_leaderboard, R.id.navigation_explore_stocks, R.id.navigation_stock_info
-            )
-        )
+//        val appBarConfiguration = AppBarConfiguration(
+//            setOf(
+//                R.id.navigation_home, R.id.navigation_leaderboard, R.id.navigation_explore_stocks, R.id.navigation_stock_info
+//            )
+//        )
         //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }

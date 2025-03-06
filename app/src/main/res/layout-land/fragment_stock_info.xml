@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.stock_info.StockInfoFragment">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/info_IMG_stock"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="8dp"
+        android:scaleType="centerCrop"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:srcCompat="@drawable/unavailable_photo" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/info_IMG_stock">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/info_LBL_symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp"
+            android:text="@string/no_stock_selected"
+            android:textColor="@color/text_color"
+            android:textSize="25sp" />
+
+        <RelativeLayout
+            android:id="@+id/info_RL_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/info_RL_price"
+            android:layout_centerHorizontal="true">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/info_IMG_change"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="7dp"
+                android:tint="@color/text_color"
+                app:srcCompat="@drawable/ic_arrow_up" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/info_LBL_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/info_IMG_change"
+                android:text="@string/missing_data"
+                android:textColor="@color/text_color" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/info_IMG_flag"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/info_LBL_change"
+                app:srcCompat="@drawable/us" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/info_RL_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/info_LBL_symbol"
+            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="8dp">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/info_LBL_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="4dp"
+                android:text="@string/default_price"
+                android:textColor="@color/text_color" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/info_IMG_sep"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                android:layout_toEndOf="@id/info_LBL_price"
+                android:tint="@color/text_color"
+                app:srcCompat="@drawable/ic_dot" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/info_LBL_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/info_IMG_sep"
+                android:text="@string/missing_date_data"
+                android:textColor="@color/text_color" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <com.github.mikephil.charting.charts.CandleStickChart
+        android:id="@+id/info_CHART_candle"
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:layout_height="250dp" />
+
+    <RelativeLayout
+        android:id="@+id/info_RL_display_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_CHART_candle"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="2dp">
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/info_TBG_scale"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/info_BTN_max"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/max" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/info_BTN_year"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/year"
+                app:rippleColor="@color/text_color" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/info_BTN_month"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/month" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/info_BTN_day"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/day" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/info_BTN_buy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@id/info_TBG_scale"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/teal_200"
+            android:text="@string/buy" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
