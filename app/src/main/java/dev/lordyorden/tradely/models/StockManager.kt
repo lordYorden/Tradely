@@ -76,6 +76,10 @@ class StockManager private constructor(private val db: StockDB) {
                                 stock.daily = prices.toMutableList()
                             }
 
+                            "hourly" -> {
+                                stock.hourly = prices.toMutableList()
+                            }
+
                             else -> Log.e("price update", "Price update on stock ${stock.symbol} with invalid type $type")
                         }
                         callback.updateStocks()
@@ -96,6 +100,9 @@ class StockManager private constructor(private val db: StockDB) {
 
         StockParser.parseDailyData(TestDataProvider.getDailyData())
             ?.let { db.updateStockPrices("IBM", it, "daily") }
+
+        StockParser.parseHourlyData(TestDataProvider.getHourlyData())
+            ?.let { db.updateStockPrices("IBM", it, "hourly") }
     }
 
     private fun generateStocks(): List<Stock> {

@@ -117,7 +117,7 @@ class StockInfoFragment : Fragment() {
                     }
 
                     R.id.info_BTN_day -> {
-                        val entries = viewM.getEntriesHourly()
+                        val entries = viewM.hourly
                         setNewEntries(entries, "dd HH:mm:ss")
                     }
                     else -> {
