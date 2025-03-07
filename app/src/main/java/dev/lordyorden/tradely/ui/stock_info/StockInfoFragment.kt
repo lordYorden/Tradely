@@ -24,8 +24,6 @@ import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.models.StockParser
 import dev.lordyorden.tradely.ui.stock_info.buy.BuyStockFragment
 import dev.lordyorden.tradely.ui.stock_info.host.StockViewModel
-import dev.lordyorden.tradely.utilities.ImageLoader
-import java.util.Locale
 
 
 class StockInfoFragment : Fragment() {
@@ -56,14 +54,19 @@ class StockInfoFragment : Fragment() {
         valueFormatter = DateAxisFormater(StockParser.baseDate.toLocalDate())
         initChart()
 
-        binding.infoBTNBuy.setOnClickListener{
+        binding.infoBTNBuy.setOnClickListener {
+
+            val buyFrag = BuyStockFragment()
+
+            //stockVM.selectedFragment = buyFrag
+
             parentFragmentManager
                 .beginTransaction()
-                .replace(R.id.host_FL_host, BuyStockFragment())
+                .replace(R.id.host_FL_host, buyFrag)
                 .commit()
         }
 
-        stockVM.selectedStock.observe(viewLifecycleOwner){ stock->
+        stockVM.selectedStock.observe(viewLifecycleOwner) { stock ->
             viewM.setStockInfo(stock)
         }
         return binding.root
@@ -71,12 +74,13 @@ class StockInfoFragment : Fragment() {
 
     private fun initChart() {
         configChart()
-        chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
+        chart.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onValueSelected(e: Entry?, h: Highlight?) {
-                h?.let {high ->
+                h?.let { high ->
 
                     viewM.currentStock?.currency?.let { curr ->
-                        ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.infoLBLPrice, high.y.toDouble(),
+                        ItemLoadingHelper.updatePriceWithRegionalCurrency(
+                            binding.infoLBLPrice, high.y.toDouble(),
                             curr
                         )
                     }
@@ -115,6 +119,7 @@ class StockInfoFragment : Fragment() {
                         val entries = viewM.hourly
                         setNewEntries(entries, "dd HH:mm:ss")
                     }
+
                     else -> {
                         presentMonthlyData()
                     }
@@ -126,32 +131,27 @@ class StockInfoFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         renderNewStock()
+        presentMonthlyData()
     }
 
     private fun renderNewStock() {
         viewM.currentStock ?: return
 
-        val currentStock:Stock = viewM.currentStock!!
+        val currentStock: Stock = viewM.currentStock!!
 
-        binding.infoLBLSymbol.text = currentStock.symbol
-        binding.infoLBLChange.text = String.format(Locale.getDefault(), "%.2f%%", currentStock.change)
-        ItemLoadingHelper.setChangeColorAndArrow(binding, binding.infoLBLChange, binding.infoIMGChange, currentStock.change)
-
-        ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.infoLBLPrice, currentStock.pricePerShare, currentStock.currency)
-//        binding.infoLBLPrice.text = buildString {
-//            append("Price: ")
-//            append(currentStock.pricePerShare)
-//            append("$")
-//        }
-
-        val symbol = currentStock.symbol
-        ImageLoader.getInstance().loadImage("https://assets.parqet.com/logos/symbol/$symbol?format=jpg", binding.infoIMGStock)
-        ItemLoadingHelper.loadFlag(currentStock.region, binding.infoIMGFlag)
-
-        presentMonthlyData()
+        ItemLoadingHelper.renderNewStock(
+            binding,
+            currentStock,
+            binding.infoLBLSymbol,
+            binding.infoLBLChange,
+            binding.infoIMGChange,
+            binding.infoLBLPrice,
+            binding.infoIMGStock,
+            binding.infoIMGFlag,
+        )
     }
 
-    private fun presentMonthlyData(){
+    private fun presentMonthlyData() {
         val entries = viewM.monthly
         setNewEntries(entries)
     }
@@ -179,17 +179,17 @@ class StockInfoFragment : Fragment() {
         dataSet.setDrawValues(false) // Hiding the values on the chart if not needed
     }
 
-    private fun setNewEntries(entries: List<CandleEntry>, format: String = "yy-MM-dd"){
+    private fun setNewEntries(entries: List<CandleEntry>, format: String = "yy-MM-dd") {
 
         if (entries.isEmpty()) {
             chart.clear()
             return
         }
 
-        if(dataSet.entryCount > 0)
+        if (dataSet.entryCount > 0)
             dataSet.clear()
 
-        entries.forEach{ entry ->
+        entries.forEach { entry ->
             dataSet.addEntry(entry)
         }
 
@@ -198,7 +198,7 @@ class StockInfoFragment : Fragment() {
 
         valueFormatter = if (format.contains("HH:mm:ss"))
             DateTimeAxisFormater(StockParser.baseDate, format)
-        else{
+        else {
             DateAxisFormater(StockParser.baseDate.toLocalDate(), format)
         }
 
@@ -209,6 +209,6 @@ class StockInfoFragment : Fragment() {
         chart.invalidate()
         chart.moveViewToX(entries.last().x)
         chart.fitScreen()
-}
+    }
 
 }
