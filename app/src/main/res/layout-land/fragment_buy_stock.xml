@@ -9,7 +9,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="16dp"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -29,7 +29,6 @@
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_toEndOf="@id/buy_IMG_stock">
 
                 <com.google.android.material.textview.MaterialTextView
@@ -197,8 +196,6 @@
                     android:id="@+id/buy_LBL_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
-                    android:layout_gravity=""
                     android:layout_marginStart="16dp"
                     android:text="@string/total_price"
                     android:textColor="@color/text_color"
@@ -210,7 +207,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_gravity=""
                     android:layout_marginEnd="16dp"
                     android:text="@string/missing_data"
                     android:textColor="@color/text_color"

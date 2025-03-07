@@ -21,4 +21,7 @@
     <string name="default_price">Price: 0$</string>
     <string name="missing_data">Missing Data</string>
     <string name="no_stock_selected">No Stock Selected</string>
+    <string name="num_shares">Num Shares</string>
+    <string name="total_price">Total Price</string>
+    <string name="amount_to_buy">Amount to buy</string>
 </resources>

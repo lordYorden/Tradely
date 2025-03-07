@@ -5,22 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import dev.lordyorden.tradely.adapter.ItemLoadingHelper
 import dev.lordyorden.tradely.databinding.FragmentBuyStockBinding
+import dev.lordyorden.tradely.ui.stock_info.host.StockViewModel
 
 class BuyStockFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = BuyStockFragment()
-    }
-
     private val viewModel: BuyStockViewModel by viewModels()
+    private val stockViewModel: StockViewModel by activityViewModels()
     private lateinit var binding: FragmentBuyStockBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // TODO: Use the ViewModel
     }
 
     override fun onCreateView(
@@ -29,11 +27,31 @@ class BuyStockFragment : Fragment() {
     ): View {
 
         binding = FragmentBuyStockBinding.inflate(layoutInflater)
-        initViews()
+
+        stockViewModel.selectedStock.observe(viewLifecycleOwner) { stock ->
+            viewModel.setStockInfo(stock)
+        }
+
         return binding.root
     }
 
-    private fun initViews() {
-        //TODO
+    override fun onResume() {
+        super.onResume()
+        displayStock()
+    }
+
+    private fun displayStock() {
+        viewModel.currentStock ?: return
+
+        ItemLoadingHelper.renderNewStock(
+            binding,
+            viewModel.currentStock!!,
+            binding.buyLBLSymbol,
+            binding.buyLBLChange,
+            binding.buyIMGChange,
+            binding.buyLBLPrice,
+            binding.buyIMGStock,
+            binding.buyIMGFlag
+        )
     }
 }

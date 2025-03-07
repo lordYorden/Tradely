@@ -12,8 +12,8 @@ import dev.lordyorden.tradely.ui.stock_info.StockInfoFragment
 class HostFragment : Fragment() {
 
     private lateinit var binding: FragmentHostBinding
-    private lateinit var child: Fragment
     private val defaultFragment: Fragment = StockInfoFragment()
+    private var child: Fragment = defaultFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,11 +25,11 @@ class HostFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentHostBinding.inflate(layoutInflater)
-        setFragment(defaultFragment)
+        setFragment(child)
         return binding.root
     }
 
-    fun setFragment(child: Fragment){
+    private fun setFragment(child: Fragment){
         this.child = child
 
         parentFragmentManager
