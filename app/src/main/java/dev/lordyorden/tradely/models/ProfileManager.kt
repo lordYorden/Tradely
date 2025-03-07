@@ -26,7 +26,7 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
         }
 
     }
-
+//
     private val contextRef = WeakReference(context)
 
     var myProfile: Profile = Profile.Builder()
@@ -143,6 +143,12 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
 //    private fun onFinishLoading() {
 //        myProfile = profiles.find { it.id == myProfile.id } ?: myProfile
 //    }
+
+    fun buyStock(symbol: String, amount: Double){
+        val currAmount = myProfile.bought.getOrDefault(symbol, 0.0)
+        myProfile.bought[symbol] = currAmount + amount
+        updateProfile(myProfile)
+    }
 
     private fun updateProfile(profile: Profile) {
         db.updateProfile(profile, object : ProfileUpdateCallback {

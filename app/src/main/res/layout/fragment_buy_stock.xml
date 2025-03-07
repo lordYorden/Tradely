@@ -147,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/buy_LBL_amount"
-                android:stepSize="1"
+                android:stepSize="0.1"
                 android:theme="@style/Widget.Material3.Slider"
                 android:valueFrom="1"
                 android:valueTo="100"
@@ -155,8 +155,7 @@
                 app:tickColorActive="@color/teal_200"
                 app:tickColorInactive="@color/text_color"
                 app:trackColorActive="@color/teal_200"
-                app:trackColorInactive="@color/text_color"
-                tools:value="50" />
+                app:trackColorInactive="@color/text_color" />
 
             <RelativeLayout
                 android:id="@+id/buy_RL_shares"

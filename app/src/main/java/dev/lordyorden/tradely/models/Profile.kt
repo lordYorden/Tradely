@@ -13,6 +13,8 @@ data class Profile private constructor(
     val change: Double,
     var followers: MutableList<String>,
     var following: MutableList<String>,
+    var bought: MutableMap<String, Double>,
+    var watchlist: MutableList<String>
 ) {
 
     constructor(): this(
@@ -24,7 +26,9 @@ data class Profile private constructor(
         description = "",
         change = 0.0,
         followers = mutableListOf(),
-        following = mutableListOf()
+        following = mutableListOf(),
+        bought = mutableMapOf(),
+        watchlist = mutableListOf(),
     )
 
     companion object CountryCodeCheck {
@@ -49,6 +53,8 @@ data class Profile private constructor(
         private var change: Double = 0.0
         private var followers: MutableList<String> = mutableListOf()
         private var following: MutableList<String> = mutableListOf()
+        private var bought: MutableMap<String, Double> = mutableMapOf()
+        private var watchlist: MutableList<String> = mutableListOf()
 
 
         fun profilePic(profilePic: String) = apply { this.profilePic = profilePic }
@@ -64,8 +70,6 @@ data class Profile private constructor(
         fun description(description: String) = apply { this.description = description }
         fun change(change: Double) = apply { this.change = change }
         fun id(id: String) = apply { this.id = id }
-        fun followers(followers: MutableList<String>) = apply { this.followers = followers }
-        fun following(following: MutableList<String>) = apply { this.following = following }
 
         fun build() = Profile(
             id = id,
@@ -76,7 +80,9 @@ data class Profile private constructor(
             description = description,
             change = change,
             followers = followers,
-            following = following
+            following = following,
+            bought = bought,
+            watchlist = watchlist,
         )
     }
 }

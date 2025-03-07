@@ -36,7 +36,7 @@ object ItemLoadingHelper {
         }
     }
 
-    fun updatePriceWithRegionalCurrency(priceView: TextView, price: Double, currency: String) {
+    fun updatePriceWithRegionalCurrency(priceView: TextView, price: Double, currency: String, preText: String = "Price: ") {
         var curr: Currency = Currency.getInstance("USD")
 
         try {
@@ -46,7 +46,7 @@ object ItemLoadingHelper {
         }
 
         priceView.text = buildString {
-            append("price: ")
+            append(preText)
             append(String.format(Locale.getDefault(), "%.2f ", price))
             append(curr.symbol)
         }

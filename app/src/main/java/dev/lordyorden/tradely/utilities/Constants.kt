@@ -4,7 +4,6 @@ import com.google.firebase.firestore.SetOptions
 
 class Constants {
     object DB {
-        const val MESSAGE_REF = "message"
         const val PRICES_REF = "prices"
         const val USERS_REF = "users"
         const val STOCKS_REF = "stocks"
@@ -18,16 +17,12 @@ class Constants {
             "description",
             "change",
             "followers",
-            "following")
-    }
-    object Data {
-        const val ACTORS_MIN_LINES: Int = 1
-        const val OVERVIEW_MIN_LINES: Int = 3
+            "following",
+            "bought")
     }
 
     object Activities{
         const val MAIN = "main"
-        const val MOVIE_LIST = "movie_list"
         const val LOGIN = "login"
         const val STORAGE = "storage"
         const val FIRESTORE = "firestore"
