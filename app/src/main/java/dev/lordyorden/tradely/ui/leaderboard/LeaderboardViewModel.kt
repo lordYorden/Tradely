@@ -18,7 +18,7 @@ class LeaderboardViewModel : ViewModel() {
         get() = _profiles
 
     init {
-        profileManager.db.addListener(object : ProfileChangesCallback{
+        profileManager.addListener(object : ProfileChangesCallback{
             override fun onProfileChanged(profile: Profile) {
                 if (_profiles.value != null)
                     setProfiles(filterProfilesById(profile.id, _profiles.value!!) + profile)
@@ -33,7 +33,6 @@ class LeaderboardViewModel : ViewModel() {
                 if (_profiles.value != null)
                     setProfiles(_profiles.value!! + profile)
             }
-
         })
 
         profileManager.loadProfiles(object : ProfileFetchCallback {

@@ -2,7 +2,9 @@ package dev.lordyorden.tradely.models
 
 import android.content.Context
 import android.util.Log
+import dev.lordyorden.tradely.interfaces.profile.ProfileChangesCallback
 import dev.lordyorden.tradely.interfaces.profile.ProfileDB
+import dev.lordyorden.tradely.interfaces.profile.ProfileDataChange
 import dev.lordyorden.tradely.interfaces.profile.ProfileFetchCallback
 import dev.lordyorden.tradely.interfaces.profile.ProfileUpdateCallback
 import java.lang.ref.WeakReference
@@ -28,6 +30,20 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
     }
 //
     private val contextRef = WeakReference(context)
+
+    private val observers: MutableList<ProfileDataChange> = mutableListOf()
+
+    fun registerObserver(callback: ProfileDataChange){
+        observers.add(callback)
+        callback.onDataChange(myProfile)
+    }
+
+    private fun notifyObservers() {
+        observers.forEach{
+            it.onDataChange(myProfile)
+        }
+    }
+
 
     var myProfile: Profile = Profile.Builder()
         .id("a0d2bab4-16e3-4d23-93d3-ac144c0b086f")
@@ -140,15 +156,43 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
 
     }
 
-//    private fun onFinishLoading() {
-//        myProfile = profiles.find { it.id == myProfile.id } ?: myProfile
-//    }
+
+    fun addListener(callback: ProfileChangesCallback){
+        db.addListener(object : ProfileChangesCallback{
+            override fun onProfileChanged(profile: Profile) {
+               if (profile.id == myProfile.id){
+                   myProfile = profile
+                   notifyObservers()
+               }
+                callback.onProfileChanged(profile)
+            }
+
+            override fun onProfileRemoved(id: String) {
+                callback.onProfileRemoved(id)
+            }
+
+            override fun onProfileAdded(profile: Profile) {
+                callback.onProfileAdded(profile)
+            }
+
+        })
+    }
 
     fun buyStock(symbol: String, amount: Double){
         val currAmount = myProfile.bought.getOrDefault(symbol, 0.0)
         myProfile.bought[symbol] = currAmount + amount
         updateProfile(myProfile)
+        notifyObservers()
     }
+
+    fun addToWatchlist(symbol: String){
+        //val currAmount = myProfile.watchlist.getOrDefault(symbol, 0.0)
+        //myProfile.bought[symbol] = currAmount + amount
+        myProfile.watchlist.add(symbol)
+        updateProfile(myProfile)
+        notifyObservers()
+    }
+
 
     private fun updateProfile(profile: Profile) {
         db.updateProfile(profile, object : ProfileUpdateCallback {
@@ -233,6 +277,7 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
         db.getProfile(myProfile.id, object : ProfileFetchCallback {
             override fun onProfileFetch(profile: Profile) {
                 myProfile = profile
+                notifyObservers()
             }
 
             override fun onProfileFetchFailed() {

@@ -16,6 +16,7 @@ import dev.lordyorden.tradely.R
 import dev.lordyorden.tradely.adapter.StockAdapter
 import dev.lordyorden.tradely.databinding.FragmentExploreStocksBinding
 import dev.lordyorden.tradely.interfaces.stock.StockCallback
+import dev.lordyorden.tradely.models.ProfileManager
 import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.ui.stock_info.host.StockViewModel
 
@@ -43,9 +44,9 @@ class ExploreStocksFragment : Fragment() {
         binding.stocksRVStocks.adapter = adapter
         binding.stocksRVStocks.layoutManager = LinearLayoutManager(context)
         adapter.stockCallback  = object : StockCallback {
-            override fun onEditClicked(stock: Stock, position: Int) {
-                Toast.makeText(context, "Edit clicked on ${stock.symbol}", Toast.LENGTH_SHORT).show()
-                stockVM.selectStock(stock)
+            override fun onExtraClicked(stock: Stock, position: Int) {
+                Toast.makeText(context, "Extra clicked on ${stock.symbol}", Toast.LENGTH_SHORT).show()
+                ProfileManager.getInstance().addToWatchlist(stock.symbol)
             }
 
             override fun onStockClicked(stock: Stock, position: Int) {

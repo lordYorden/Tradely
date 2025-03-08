@@ -9,7 +9,7 @@ import dev.lordyorden.tradely.interfaces.stock.StockUpdateCallback
 import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.models.StockManager
 
-class ExploreStocksViewModel : ViewModel() {
+class ExploreStocksViewModel : ViewModel(){
 
     private val stockManager = StockManager.getInstance()
 

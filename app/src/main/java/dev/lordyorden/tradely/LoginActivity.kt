@@ -10,6 +10,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import dev.lordyorden.tradely.models.Profile
 import dev.lordyorden.tradely.models.ProfileManager
+import dev.lordyorden.tradely.models.StockManager
 
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +75,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun transactToNextScreen() {
         loadProfile()
+        StockManager.getInstance().registerStocks()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()

@@ -18,7 +18,8 @@ class Constants {
             "change",
             "followers",
             "following",
-            "bought")
+            "bought",
+            "watchlist")
     }
 
     object Activities{

@@ -1,8 +1,7 @@
 package dev.lordyorden.tradely.adapter
 
-//import dev.lordyorden.test_fragments.utilities.Constants
-//import dev.lordyorden.test_fragments.interfaces.MovieCallback
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import dev.lordyorden.tradely.databinding.StockItemBinding
@@ -21,6 +20,7 @@ class StockAdapter(
     RecyclerView.Adapter<StockAdapter.StockViewHolder>() {
 
     var stockCallback: StockCallback? = null
+    var hasExtraOption = true
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StockViewHolder {
         val binding = StockItemBinding
@@ -34,24 +34,6 @@ class StockAdapter(
 
     private fun getItem(position: Int) = stocks[position]
 
-//    private fun setChangeColorAndArrow(binding: ProfileItemBinding, change: Double) {
-//        val positiveColor = binding.root.resources.getColor(R.color.positive, null)
-//        val negativeColor = binding.root.resources.getColor(R.color.negative, null)
-//
-//        val arrowUp: Int = R.drawable.ic_arrow_up
-//        val arrowDown: Int = R.drawable.ic_arrow_down
-//
-//        if(change > 0){
-//            binding.profileLBLChange.setTextColor(positiveColor)
-//            binding.profileIMGChange.setImageResource(arrowUp)
-//            binding.profileIMGChange.setColorFilter(positiveColor)
-//        } else {
-//            binding.profileLBLChange.setTextColor(negativeColor)
-//            binding.profileIMGChange.setImageResource(arrowDown)
-//            binding.profileIMGChange.setColorFilter(negativeColor)
-//        }
-//    }
-
     override fun onBindViewHolder(holder: StockViewHolder, position: Int) {
         with(holder) {
 
@@ -59,6 +41,13 @@ class StockAdapter(
             holder.itemView.layoutParams = ItemLoadingHelper.fixedLastMargin(params, position, stocks.size)
 
             with(getItem(position)) {
+
+                if (hasExtraOption) {
+                    binding.stockRLEdit.visibility = View.VISIBLE
+                } else{
+                    binding.stockRLEdit.visibility = View.GONE
+                }
+
                 binding.stockLBLName.text = symbol
                 binding.stockLBLDescription.text = description
                 binding.stockLBLMarketCap.text = buildString {
@@ -69,19 +58,13 @@ class StockAdapter(
 
                 ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.stockLBLPrice, pricePerShare, currency)
 
-//                binding.stockLBLPrice.text = buildString {
-//                    append("Price: ")
-//                    append(pricePerShare)
-//                    append("$")
-//                }
-
                 binding.stockLBLChange.text = String.format(Locale.getDefault(), "%.2f%%", change)
 
                 ImageLoader.getInstance().loadImage("https://assets.parqet.com/logos/symbol/$symbol?format=jpg", binding.stockIMGStock)
+                /*ImageLoader.getInstance().loadImage(profilePic, binding.stockIMGStock)*/
 
                 ItemLoadingHelper.loadFlag(region, binding.stockIMGFlag)
 
-                /*ImageLoader.getInstance().loadImage(profilePic, binding.stockIMGStock)*/
                 ItemLoadingHelper.setChangeColorAndArrow(binding, binding.stockLBLChange, binding.stockIMGChange, change)
             }
         }
@@ -93,7 +76,14 @@ class StockAdapter(
 
         init {
             binding.stockRLEdit.setOnClickListener {
-                stockCallback?.onEditClicked(
+                stockCallback?.onExtraClicked(
+                    getItem(adapterPosition),
+                    adapterPosition
+                )
+            }
+
+            binding.stockLBLName.setOnClickListener {
+                stockCallback?.onStockClicked(
                     getItem(adapterPosition),
                     adapterPosition
                 )
