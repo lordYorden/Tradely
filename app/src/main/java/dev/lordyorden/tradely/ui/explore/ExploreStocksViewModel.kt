@@ -18,13 +18,11 @@ class ExploreStocksViewModel : ViewModel() {
         get() = _stocks
 
     init {
-        stockManager.registerStocks(object: StockUpdateCallback{
+        stockManager.registerObserver(object: StockUpdateCallback{
             override fun updateStocks() {
                 setStocks(stockManager.stocks)
             }
         })
-
-        //stockManager.uploadTestPrice()
     }
 
     fun setStocks(stocks: List<Stock>) {

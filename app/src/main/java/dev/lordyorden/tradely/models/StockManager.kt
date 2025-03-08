@@ -37,11 +37,17 @@ class StockManager private constructor(private val db: StockDB) {
 
     val stocks: MutableList<Stock> = mutableListOf()
 
+    private val observers: MutableList<StockUpdateCallback> = mutableListOf()
+    fun registerObserver(callback: StockUpdateCallback){
+        observers.add(callback)
+        callback.updateStocks()
+    }
+
     private fun filterStocksBySymbol(symbol: String) {
         stocks.removeIf { stock -> stock.symbol == symbol }
     }
 
-    fun registerStocks(callback: StockUpdateCallback) {
+    fun registerStocks() {
         db.registerStocks(object : StockChangesCallback {
             override fun onStockChanged(stock: Stock) {
                 if (stocks.isNotEmpty()) {
@@ -49,18 +55,17 @@ class StockManager private constructor(private val db: StockDB) {
                 }
 
                 stocks.add(stock)
-                callback.updateStocks()
+                notifyObservers()
             }
 
             override fun onStockRemoved(symbol: String) {
                 if (stocks.isNotEmpty())
                     filterStocksBySymbol(symbol)
-                callback.updateStocks()
+                notifyObservers()
             }
 
             override fun onStockAdded(stock: Stock) {
                 stocks.add(stock)
-
                 db.registerUpdateOnPrice(stock.symbol, object : StockPriceUpdateCallback{
                     override fun onPricesUpdate(prices: List<CandleEntry>, type: String) {
                         when(type){
@@ -82,13 +87,19 @@ class StockManager private constructor(private val db: StockDB) {
 
                             else -> Log.e("price update", "Price update on stock ${stock.symbol} with invalid type $type")
                         }
-                        callback.updateStocks()
+                        notifyObservers()
                     }
                 })
-                callback.updateStocks()
+                notifyObservers()
             }
 
         })
+    }
+
+    private fun notifyObservers() {
+        observers.forEach{
+            it.updateStocks()
+        }
     }
 
     fun uploadTestPrice(){
@@ -105,7 +116,7 @@ class StockManager private constructor(private val db: StockDB) {
             ?.let { db.updateStockPrices("IBM", it, "hourly") }
     }
 
-    private fun generateStocks(): List<Stock> {
+    fun generateStocks(): List<Stock> {
         val stocks = mutableListOf<Stock>()
         stocks.add(
             Stock.Builder()

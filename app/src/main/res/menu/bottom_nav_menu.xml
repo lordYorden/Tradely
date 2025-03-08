@@ -13,12 +13,12 @@
 
     <item
         android:id="@+id/navigation_explore_stocks"
-        android:icon="@drawable/ic_stock_explore"
+        android:icon="@drawable/ic_explore"
         android:title="@string/explore_stocks" />
 
     <item
         android:id="@+id/navigation_stock_info"
-        android:icon="@drawable/ic_buy"
+        android:icon="@drawable/ic_candlechart"
         android:title="@string/buy_stock" />
 
 </menu>

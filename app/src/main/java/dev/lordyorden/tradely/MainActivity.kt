@@ -11,6 +11,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dev.lordyorden.tradely.databinding.ActivityMainBinding
+import dev.lordyorden.tradely.models.StockManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 //        )
         //setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        StockManager.getInstance().registerStocks()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
