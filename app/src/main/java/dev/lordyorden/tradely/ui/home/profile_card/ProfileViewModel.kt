@@ -8,7 +8,7 @@ import dev.lordyorden.tradely.models.Profile
 import dev.lordyorden.tradely.models.ProfileManager
 
 class ProfileViewModel : ViewModel() {
-    private val mutableSelectedItem = MutableLiveData<Profile>()
+    private val mutableSelectedItem = MutableLiveData<Profile>(ProfileManager.getInstance().myProfile)
     val selectedProfile: LiveData<Profile> get() = mutableSelectedItem
 
     fun selectProfile(profile: Profile) {

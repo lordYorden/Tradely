@@ -4,7 +4,7 @@ import dev.lordyorden.tradely.models.Profile
 
 interface ProfileDB {
 
-    fun updateProfile(newProfile: Profile, updateCallback: ProfileUpdateCallback)
+    fun updateProfile(newProfile: Profile, updateCallback: ProfileUpdateCallback, onlyEditable: Boolean = false)
 
     fun getProfile(id: String, fetchCallback: ProfileFetchCallback)
 

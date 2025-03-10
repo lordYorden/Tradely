@@ -25,14 +25,27 @@
         app:layout_constraintStart_toEndOf="@id/profile_IMG_profile"
         app:layout_constraintTop_toTopOf="@id/profile_IMG_profile">
 
-        <com.google.android.material.textview.MaterialTextView
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/profile_ING_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="8dp"
+            android:tint="@color/text_color"
+            android:src="@drawable/ic_edit"/>
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:background="@null"
+            android:textColorHint="@color/text_color"
             android:id="@+id/profile_LBL_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:textColor="@color/text_color"
             android:textSize="25sp"
-            tools:text="Yarden" />
+            android:enabled="false"
+            tools:text="Yarden"
+            tools:ignore="RelativeOverlap" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/profile_LBL_net_worth"
@@ -45,8 +58,11 @@
             android:visibility="visible"
             tools:text="Net Worth: 5$" />
 
-        <com.google.android.material.textview.MaterialTextView
+        <com.google.android.material.textfield.TextInputEditText
+            android:background="@null"
+            android:textColorHint="@color/text_color"
             android:id="@+id/profile_LBL_description"
+            android:enabled="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/profile_LBL_net_worth"

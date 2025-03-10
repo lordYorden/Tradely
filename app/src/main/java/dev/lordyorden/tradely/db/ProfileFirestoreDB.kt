@@ -20,8 +20,9 @@ class ProfileFirestoreDB : ProfileDB {
     var profileParams = Constants.DB.PROFILE_UPLOAD_DEFAULT_OPTIONS
         private set
 
-    override fun updateProfile(newProfile: Profile, updateCallback: ProfileUpdateCallback) {
-        updateProfile(newProfile, profileParams, updateCallback)
+    override fun updateProfile(newProfile: Profile, updateCallback: ProfileUpdateCallback, onlyEditable: Boolean) {
+        val fields = if(onlyEditable) Constants.DB.PROFILE_UPLOAD_EDITABLE_OPTIONS else profileParams
+        updateProfile(newProfile, fields, updateCallback)
     }
 
     private fun updateProfile(newProfile: Profile, fields: SetOptions, updateCallback: ProfileUpdateCallback){
