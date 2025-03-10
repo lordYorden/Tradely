@@ -1,5 +1,6 @@
 package dev.lordyorden.tradely.ui.watchlist.filter
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,9 @@ import dev.lordyorden.tradely.R
 import dev.lordyorden.tradely.adapter.StockAdapter
 import dev.lordyorden.tradely.databinding.FragmentStocksViewBinding
 import dev.lordyorden.tradely.interfaces.stock.StockCallback
+import dev.lordyorden.tradely.interfaces.stock.StockUpdateCallback
 import dev.lordyorden.tradely.models.Stock
+import dev.lordyorden.tradely.models.StockManager
 import dev.lordyorden.tradely.ui.home.profile_card.ProfileViewModel
 import dev.lordyorden.tradely.ui.stock_info.host.StockViewModel
 
@@ -27,6 +30,7 @@ abstract class StocksViewFragment() : Fragment() {
 
     abstract fun getViewMode(): FilterStocksViewModel
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,6 +43,11 @@ abstract class StocksViewFragment() : Fragment() {
         binding.stocksRVStocks.adapter = adapter
         binding.stocksRVStocks.layoutManager = LinearLayoutManager(context)
 
+        StockManager.getInstance().registerObserver(object: StockUpdateCallback {
+            override fun updateStocks() {
+                getViewMode().onStockChange()
+            }
+        })
 
         getViewMode().getStocksLive().observe(viewLifecycleOwner) { stocks ->
             if(stocks != null) {

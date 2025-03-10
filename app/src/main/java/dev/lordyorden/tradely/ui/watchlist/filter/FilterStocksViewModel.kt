@@ -7,4 +7,5 @@ import dev.lordyorden.tradely.models.Stock
 interface FilterStocksViewModel {
     fun getStocksLive(): LiveData<List<Stock>>
     fun onProfileChanged(profile: Profile)
+    fun onStockChange()
 }

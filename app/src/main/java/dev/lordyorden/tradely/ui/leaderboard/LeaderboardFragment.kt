@@ -1,5 +1,6 @@
 package dev.lordyorden.tradely.ui.leaderboard
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import dev.lordyorden.tradely.R
 import dev.lordyorden.tradely.adapter.ProfileAdapter
 import dev.lordyorden.tradely.databinding.FragmentLeaderboardBinding
 import dev.lordyorden.tradely.interfaces.profile.ProfileCallback
@@ -27,6 +30,7 @@ class LeaderboardFragment : Fragment() {
 
     private val profileSelector: ProfileViewModel by activityViewModels()
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,6 +57,8 @@ class LeaderboardFragment : Fragment() {
             override fun onProfileClicked(profile: Profile) {
                 profileSelector.selectProfile(profile)
                 Toast.makeText(context, "Profile clicked on ${profile.name}", Toast.LENGTH_SHORT).show()
+                val navController = findNavController()
+                navController.navigate(R.id.leaderboard_to_home)
             }
 
         }

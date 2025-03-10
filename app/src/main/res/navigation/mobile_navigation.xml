@@ -22,7 +22,13 @@
         android:id="@+id/navigation_leaderboard"
         android:name="dev.lordyorden.tradely.ui.leaderboard.LeaderboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_leaderboard" />
+        tools:layout="@layout/fragment_leaderboard" >
+        <action
+            android:id="@+id/leaderboard_to_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_leaderboard"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_explore_stocks"
