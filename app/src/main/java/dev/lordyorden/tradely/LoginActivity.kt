@@ -58,10 +58,10 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
-        val response = result.idpResponse
+        //val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
-            val user = FirebaseAuth.getInstance().currentUser
+            //val user = FirebaseAuth.getInstance().currentUser
             transactToNextScreen()
         } else {
             Toast.makeText(this, "Error: failed logging in.", Toast.LENGTH_LONG).show()
@@ -76,6 +76,7 @@ class LoginActivity : AppCompatActivity() {
     private fun transactToNextScreen() {
         loadProfile()
         StockManager.getInstance().registerStocks()
+        ProfileManager.getInstance().addListener()
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()

@@ -110,6 +110,12 @@ class ProfileAdapter(
                     adapterPosition
                 )
             }
+
+            binding.profileLBLName.setOnClickListener {
+                profileCallback?.onProfileClicked(
+                    getItem(adapterPosition)
+                )
+            }
         }
     }
 

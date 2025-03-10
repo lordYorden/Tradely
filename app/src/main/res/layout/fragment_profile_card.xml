@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    tools:context=".ui.home.profile_card.ProfileCardFragment">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/profile_IMG_profile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerVertical="true"
+        android:layout_margin="8dp"
+        android:scaleType="centerCrop"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:srcCompat="@drawable/unavailable_photo" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="125dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile_IMG_profile"
+        app:layout_constraintTop_toTopOf="@id/profile_IMG_profile">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/profile_LBL_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:textColor="@color/text_color"
+            android:textSize="25sp"
+            tools:text="Yarden" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/profile_LBL_net_worth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile_LBL_name"
+            android:layout_margin="4dp"
+            android:textColor="@color/text_color"
+            android:textStyle="bold"
+            android:visibility="visible"
+            tools:text="Net Worth: 5$" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/profile_LBL_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/profile_LBL_net_worth"
+            android:layout_margin="4dp"
+            android:maxLines="4"
+            android:minLines="1"
+            android:textColor="@color/text_color"
+            android:textSize="12sp"
+            tools:text="@string/lorem_ipsum" />
+
+        <RelativeLayout
+            android:id="@+id/profile_RL_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:layout_margin="4dp"
+            android:layout_below="@id/profile_LBL_description">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/profile_IMG_change"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentStart="true"
+
+                android:layout_marginTop="7dp"
+                android:tint="@color/positive"
+                app:srcCompat="@drawable/ic_arrow_up" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/profile_LBL_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/profile_IMG_change"
+                android:textColor="@color/positive"
+                tools:text="1.75%" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/profile_IMG_flag"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/profile_LBL_change"
+                app:srcCompat="@drawable/us" />
+        </RelativeLayout>
+    </RelativeLayout>
+</RelativeLayout>

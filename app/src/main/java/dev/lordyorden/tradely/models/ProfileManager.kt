@@ -28,19 +28,62 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
         }
 
     }
-//
+
     private val contextRef = WeakReference(context)
 
-    private val observers: MutableList<ProfileDataChange> = mutableListOf()
 
+    val profiles: MutableList<Profile> = mutableListOf()
+
+    fun filterProfilesById(id: String) {
+        profiles.removeIf { profile -> profile.id == id }
+    }
+
+    fun addListener(){
+        db.addListener(object : ProfileChangesCallback{
+            override fun onProfileChanged(profile: Profile) {
+                if (profiles.isNotEmpty()){
+                    filterProfilesById(profile.id)
+                }
+                profiles.add(profile)
+                notifyObservers()
+            }
+
+            override fun onProfileRemoved(id: String) {
+                if (profiles.isNotEmpty()){
+                    filterProfilesById(id)
+                }
+                notifyObservers()
+            }
+
+            override fun onProfileAdded(profile: Profile) {
+                profiles.add(profile)
+                notifyObservers()
+            }
+
+        })
+    }
+
+    private fun updateProfile(profile: Profile) {
+        db.updateProfile(profile, object : ProfileUpdateCallback {
+            override fun onUpdateSuccess(id: String) {
+                Log.d("Profile DB Update", "Profile updated $id")
+            }
+
+            override fun onUpdateFailed(id: String) {
+                Log.d("Profile DB Update", "Error updating profile $id")
+            }
+        })
+    }
+
+    private val observers: MutableList<ProfileDataChange> = mutableListOf()
     fun registerObserver(callback: ProfileDataChange){
         observers.add(callback)
-        callback.onDataChange(myProfile)
+        callback.onDataChange()
     }
 
     private fun notifyObservers() {
         observers.forEach{
-            it.onDataChange(myProfile)
+            it.onDataChange()
         }
     }
 
@@ -54,6 +97,7 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
         db.getProfile(id, object : ProfileFetchCallback {
             override fun onProfileFetch(profile: Profile) {
                 myProfile = profile
+                notifyObservers()
                 Log.d("Profile loaded", "profile was loaded from db for $id")
             }
 
@@ -62,6 +106,7 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
                     override fun onUpdateSuccess(id: String) {
                         Log.d("New Profile", "Profile created for $id")
                         myProfile = profile
+                        notifyObservers()
                     }
 
                     override fun onUpdateFailed(id: String) {
@@ -72,6 +117,83 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
             }
 
         })
+    }
+
+    fun buyStock(symbol: String, amount: Double){
+        val currAmount = myProfile.bought.getOrDefault(symbol, 0.0)
+        myProfile.bought[symbol] = currAmount + amount
+        updateProfile(myProfile)
+        notifyObservers()
+    }
+
+    fun addToWatchlist(symbol: String){
+        myProfile.watchlist.add(symbol)
+        updateProfile(myProfile)
+        notifyObservers()
+    }
+
+    fun toggleFollow(id: String) {
+        if (isFollowing(id)) {
+            myProfile.following.remove(id)
+        } else {
+            myProfile.following.add(id)
+        }
+        updateProfile(myProfile)
+        toggleFollowerOf(id)
+    }
+
+    private fun toggleFollowerOf(id: String) {
+        db.getProfile(id, object : ProfileFetchCallback {
+            override fun onProfileFetch(profile: Profile) {
+                if (isFollowerOf(profile)) {
+                    profile.followers.remove(myProfile.id)
+                } else {
+                    profile.followers.add(myProfile.id)
+                }
+                updateProfile(profile)
+            }
+
+            override fun onProfileFetchFailed() {
+                Log.d("Profile Fetch", "Error setting follower for $id")
+            }
+
+        })
+    }
+
+    fun isFollowing(id: String): Boolean {
+        return myProfile.following.find { it == id } != null
+    }
+
+    fun isFollowerOf(profile: Profile): Boolean {
+        return profile.followers.find { it == myProfile.id } != null
+    }
+
+//    fun loadProfiles(fetchCallback: ProfileFetchCallback) {
+//        db.loadProfiles(fetchCallback)
+//        db.getProfile(myProfile.id, object : ProfileFetchCallback {
+//            override fun onProfileFetch(profile: Profile) {
+//                myProfile = profile
+//                notifyObservers()
+//            }
+//
+//            override fun onProfileFetchFailed() {
+//                Log.d("Profile Fetch", "Error fetching my profile")
+//            }
+//
+//        })
+//    }
+
+    fun saveProfiles() {
+        db.saveProfiles(generateProfileList(), object : ProfileUpdateCallback {
+            override fun onUpdateSuccess(id: String) {
+                Log.d("Profile DB Update", "Profile updated $id")
+            }
+
+            override fun onUpdateFailed(id: String) {
+                Log.d("Profile DB Update", "Error updating profile $id")
+            }
+        })
+
     }
 
     private fun generateProfileList(): List<Profile> {
@@ -153,184 +275,6 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
         )
 
         return profiles
-
-    }
-
-
-    fun addListener(callback: ProfileChangesCallback){
-        db.addListener(object : ProfileChangesCallback{
-            override fun onProfileChanged(profile: Profile) {
-               if (profile.id == myProfile.id){
-                   myProfile = profile
-                   notifyObservers()
-               }
-                callback.onProfileChanged(profile)
-            }
-
-            override fun onProfileRemoved(id: String) {
-                callback.onProfileRemoved(id)
-            }
-
-            override fun onProfileAdded(profile: Profile) {
-                callback.onProfileAdded(profile)
-            }
-
-        })
-    }
-
-    fun buyStock(symbol: String, amount: Double){
-        val currAmount = myProfile.bought.getOrDefault(symbol, 0.0)
-        myProfile.bought[symbol] = currAmount + amount
-        updateProfile(myProfile)
-        notifyObservers()
-    }
-
-    fun addToWatchlist(symbol: String){
-        //val currAmount = myProfile.watchlist.getOrDefault(symbol, 0.0)
-        //myProfile.bought[symbol] = currAmount + amount
-        myProfile.watchlist.add(symbol)
-        updateProfile(myProfile)
-        notifyObservers()
-    }
-
-
-    private fun updateProfile(profile: Profile) {
-        db.updateProfile(profile, object : ProfileUpdateCallback {
-            override fun onUpdateSuccess(id: String) {
-                Log.d("Profile DB Update", "Profile updated $id")
-            }
-
-            override fun onUpdateFailed(id: String) {
-                Log.d("Profile DB Update", "Error updating profile $id")
-            }
-        })
-    }
-
-    /*    private fun updateProfile(newProfile: Profile, fields: SetOptions = Constants.DB.PROFILE_UPLOAD_DEFAULT_OPTIONS){
-            val profileDoc = db.collection(Constants.DB.PROFILES_REF)
-            profileDoc.document(newProfile.id.toString())
-                .set(newProfile, fields)
-                .addOnSuccessListener {
-                    Log.d("My Profile Updated", "Profile: ${newProfile.id}")
-                }
-                .addOnFailureListener {
-                    Log.d("My Profile Update failed!", "Error updating ${newProfile.id}")
-                }
-        }*/
-
-    /*private fun getProfile(id: String, fetchCallback: ProfileFetchCallback){
-        val profileCollection = db.collection(Constants.DB.PROFILES_REF)
-        profileCollection.document(id)
-            .get()
-            .addOnSuccessListener { result ->
-                val profile: Profile? = result.toObject<Profile>()
-                if (profile != null){
-                    profile.id = UUID.fromString(result.id)
-                    Log.d("Profile fetched", "Profile: ${profile.id}")
-                    fetchCallback.onProfileFetch(profile)
-                }
-            }
-            .addOnFailureListener {
-                Log.d("Profile fetch failed!", "Error fetching $id")
-                fetchCallback.onProfileFetchFailed()
-            }
-    }*/
-
-    fun toggleFollow(id: String) {
-        if (isFollowing(id)) {
-            myProfile.following.remove(id)
-        } else {
-            myProfile.following.add(id)
-        }
-        updateProfile(myProfile)
-        toggleFollowerOf(id)
-    }
-
-    private fun toggleFollowerOf(id: String) {
-        db.getProfile(id, object : ProfileFetchCallback {
-            override fun onProfileFetch(profile: Profile) {
-                if (isFollowerOf(profile)) {
-                    profile.followers.remove(myProfile.id)
-                } else {
-                    profile.followers.add(myProfile.id)
-                }
-                updateProfile(profile)
-            }
-
-            override fun onProfileFetchFailed() {
-                Log.d("Profile Fetch", "Error setting follower for $id")
-            }
-
-        })
-    }
-
-    fun isFollowing(id: String): Boolean {
-        return myProfile.following.find { it == id } != null
-    }
-
-    fun isFollowerOf(profile: Profile): Boolean {
-        return profile.followers.find { it == myProfile.id } != null
-    }
-
-    fun loadProfiles(fetchCallback: ProfileFetchCallback) {
-        db.loadProfiles(fetchCallback)
-        db.getProfile(myProfile.id, object : ProfileFetchCallback {
-            override fun onProfileFetch(profile: Profile) {
-                myProfile = profile
-                notifyObservers()
-            }
-
-            override fun onProfileFetchFailed() {
-                Log.d("Profile Fetch", "Error fetching my profile")
-            }
-
-        })
-    }
-    /*    fun loadProfilesFromFirestore() {
-            val list: MutableList<Profile> = mutableListOf()
-
-            val profileCollection = db.collection(Constants.DB.PROFILES_REF)
-            profileCollection.get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        val profile = document.toObject<Profile>()
-                        profile.id = UUID.fromString(document.id)
-                        list.add(profile)
-                        Log.d("Loaded", "${document.id} => ${document.data}")
-                    }
-                }
-                .addOnFailureListener { exception ->
-                    Log.d("Error", "Error getting documents.", exception)
-                }.addOnCompleteListener {
-                    profiles = list
-                    onFinishLoading()
-                }
-
-        }*/
-
-    fun saveProfiles() {
-//        val profilesCollection = db.collection(Constants.DB.PROFILES_REF)
-//        generateProfileList().forEach { profile ->
-//            val documentId = profile.id.toString()
-//            //moviesCollection.add(movie) //also works
-//            profilesCollection.document(documentId)
-//                .set(profile, Constants.DB.PROFILE_UPLOAD_DEFAULT_OPTIONS)
-//                .addOnSuccessListener {
-//                    Log.d("profiles Saved To DB", "Movie: $documentId")
-//                }
-//                .addOnFailureListener {
-//                    Log.d("profiles Save failed!", "Error saving $documentId")
-//                }
-//        }
-        db.saveProfiles(generateProfileList(), object : ProfileUpdateCallback {
-            override fun onUpdateSuccess(id: String) {
-                Log.d("Profile DB Update", "Profile updated $id")
-            }
-
-            override fun onUpdateFailed(id: String) {
-                Log.d("Profile DB Update", "Error updating profile $id")
-            }
-        })
 
     }
 }

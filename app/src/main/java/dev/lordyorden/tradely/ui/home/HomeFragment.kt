@@ -4,39 +4,41 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import dev.lordyorden.tradely.R
 import dev.lordyorden.tradely.databinding.FragmentHomeBinding
+import dev.lordyorden.tradely.ui.home.profile_card.ProfileCardFragment
+import dev.lordyorden.tradely.ui.watchlist.nav.WatchlistNevFragment
 
 class HomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentHomeBinding
+    val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        initViews()
+        return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun initViews() {
+        val profileFragment = ProfileCardFragment()
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.home_FRAME_profile_card, profileFragment)
+            .commit()
+
+
+        val watchlistNevFragment = WatchlistNevFragment()
+        parentFragmentManager
+            .beginTransaction()
+            .replace(R.id.home_FRAME_watchlist, watchlistNevFragment)
+            .commit()
     }
 }

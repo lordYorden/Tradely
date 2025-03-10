@@ -6,13 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import dev.lordyorden.tradely.adapter.ProfileAdapter
-import dev.lordyorden.tradely.interfaces.profile.ProfileCallback
 import dev.lordyorden.tradely.databinding.FragmentLeaderboardBinding
+import dev.lordyorden.tradely.interfaces.profile.ProfileCallback
 import dev.lordyorden.tradely.models.Profile
 import dev.lordyorden.tradely.models.ProfileManager
+import dev.lordyorden.tradely.ui.home.profile_card.ProfileViewModel
 
 class LeaderboardFragment : Fragment() {
 
@@ -22,6 +24,8 @@ class LeaderboardFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var adapter: ProfileAdapter
+
+    private val profileSelector: ProfileViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,6 +48,11 @@ class LeaderboardFragment : Fragment() {
                 ProfileManager.getInstance().toggleFollow(profile.id)
                 //adapter.notifyItemChanged(position)
                 Toast.makeText(context, "Follow clicked on ${profile.name}", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onProfileClicked(profile: Profile) {
+                profileSelector.selectProfile(profile)
+                Toast.makeText(context, "Profile clicked on ${profile.name}", Toast.LENGTH_SHORT).show()
             }
 
         }

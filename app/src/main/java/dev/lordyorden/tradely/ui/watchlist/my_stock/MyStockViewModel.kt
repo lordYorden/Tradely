@@ -2,7 +2,6 @@ package dev.lordyorden.tradely.ui.watchlist.my_stock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import dev.lordyorden.tradely.interfaces.profile.ProfileDataChange
 import dev.lordyorden.tradely.interfaces.stock.ProfileStockFilter
 import dev.lordyorden.tradely.interfaces.stock.StockUpdateCallback
 import dev.lordyorden.tradely.models.Profile
@@ -14,7 +13,7 @@ import dev.lordyorden.tradely.ui.watchlist.filter.FilterStocksViewModel
 class MyStockViewModel: ViewModel(), FilterStocksViewModel {
 
     private val stockManager = StockManager.getInstance()
-    private val profileManager = ProfileManager.getInstance()
+    //private val profileManager = ProfileManager.getInstance()
 
     private val _stocks = MutableLiveData<List<Stock>>(listOf())
     val stocks: LiveData<List<Stock>>
@@ -27,11 +26,7 @@ class MyStockViewModel: ViewModel(), FilterStocksViewModel {
             }
         })
 
-        profileManager.registerObserver(object : ProfileDataChange {
-            override fun onDataChange(profile: Profile) {
-                useFilter(profile)
-            }
-        })
+        //todo add myProfile observer
     }
 
     fun useFilter(profile: Profile = ProfileManager.getInstance().myProfile) {

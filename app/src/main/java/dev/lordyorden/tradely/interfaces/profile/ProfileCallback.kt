@@ -4,4 +4,5 @@ import dev.lordyorden.tradely.models.Profile
 
 interface ProfileCallback {
     fun onFollowClicked(profile: Profile, position: Int)
+    fun onProfileClicked(profile: Profile)
 }
