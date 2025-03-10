@@ -126,12 +126,6 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
         notifyObservers()
     }
 
-    fun addToWatchlist(symbol: String){
-        myProfile.watchlist.add(symbol)
-        updateProfile(myProfile)
-        notifyObservers()
-    }
-
     fun toggleFollow(id: String) {
         if (isFollowing(id)) {
             myProfile.following.remove(id)
@@ -276,5 +270,25 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
 
         return profiles
 
+    }
+
+    fun hasStockOnWatchlist(symbol: String): Boolean {
+        return myProfile.watchlist.contains(symbol)
+    }
+
+    private fun isWatching(symbol: String): Boolean {
+        return myProfile.watchlist.contains(symbol)
+    }
+
+    fun toggleWatchlist(symbol: String) {
+
+        if (isWatching(symbol)){
+            myProfile.watchlist.remove(symbol)
+        } else {
+            myProfile.watchlist.add(symbol)
+        }
+
+        updateProfile(myProfile)
+        notifyObservers()
     }
 }

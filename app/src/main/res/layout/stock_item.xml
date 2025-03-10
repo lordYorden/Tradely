@@ -132,7 +132,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="7dp"
-                app:srcCompat="@android:drawable/ic_input_add"
+                app:srcCompat="@drawable/ic_add"
                 android:tint="@color/text_color"
                 />
 

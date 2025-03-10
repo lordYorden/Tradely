@@ -46,7 +46,8 @@ class ExploreStocksFragment : Fragment() {
         adapter.stockCallback  = object : StockCallback {
             override fun onExtraClicked(stock: Stock, position: Int) {
                 Toast.makeText(context, "Extra clicked on ${stock.symbol}", Toast.LENGTH_SHORT).show()
-                ProfileManager.getInstance().addToWatchlist(stock.symbol)
+                ProfileManager.getInstance().toggleWatchlist(stock.symbol)
+                adapter.notifyItemChanged(position)
             }
 
             override fun onStockClicked(stock: Stock, position: Int) {

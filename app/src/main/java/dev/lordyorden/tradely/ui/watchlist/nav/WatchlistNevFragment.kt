@@ -43,7 +43,7 @@ class WatchlistNevFragment : Fragment() {
                     tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_watchlist_alt, null)
                 }
                 1 -> {
-                    tab.text = "My stocks"
+                    tab.text = "Owned Stocks"
                     tab.icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_my_stock, null)
                 }
             }

@@ -3,9 +3,12 @@ package dev.lordyorden.tradely.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import dev.lordyorden.tradely.R
 import dev.lordyorden.tradely.databinding.StockItemBinding
 import dev.lordyorden.tradely.interfaces.stock.StockCallback
+import dev.lordyorden.tradely.models.ProfileManager
 import dev.lordyorden.tradely.models.Stock
 import dev.lordyorden.tradely.utilities.ImageLoader
 import java.util.Locale
@@ -66,7 +69,20 @@ class StockAdapter(
                 ItemLoadingHelper.loadFlag(region, binding.stockIMGFlag)
 
                 ItemLoadingHelper.setChangeColorAndArrow(binding, binding.stockLBLChange, binding.stockIMGChange, change)
+
+                setWatchlistButton(binding, ProfileManager.getInstance().hasStockOnWatchlist(symbol))
             }
+        }
+    }
+
+    private fun setWatchlistButton(binding: StockItemBinding, hasStockOnWatchlist: Boolean) {
+        val add = ResourcesCompat.getDrawable(binding.root.resources,R.drawable.ic_add, null)
+        val remove = ResourcesCompat.getDrawable(binding.root.resources,R.drawable.ic_remove, null)
+
+        if(hasStockOnWatchlist){
+            binding.stockIMGEdit.setImageDrawable(remove)
+        } else {
+            binding.stockIMGEdit.setImageDrawable(add)
         }
     }
 
