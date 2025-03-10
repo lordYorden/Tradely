@@ -3,13 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_leaderboard">
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="dev.lordyorden.tradely.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+
+        <action
+            android:id="@+id/action_home_to_stock_info"
+            app:destination="@id/navigation_stock_info"
+            app:popUpTo="@id/navigation_home"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_leaderboard"
@@ -21,23 +28,18 @@
         android:id="@+id/navigation_explore_stocks"
         android:name="dev.lordyorden.tradely.ui.explore.ExploreStocksFragment"
         android:label="@string/explore_stocks"
-        tools:layout="@layout/fragment_explore_stocks" />
+        tools:layout="@layout/fragment_explore_stocks" >
+        <action
+            android:id="@+id/explore_stocks_to_stock_info"
+            app:destination="@id/navigation_stock_info"
+            app:popUpTo="@id/navigation_explore_stocks"
+            app:popUpToInclusive="true" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_stock_info"
         android:name="dev.lordyorden.tradely.ui.stock_info.host.HostFragment"
         android:label="@string/stock_info"
-        tools:layout="@layout/fragment_stock_info" />
+        tools:layout="@layout/fragment_stock_info"/>
 
-    <action
-        android:id="@+id/action_home_to_stock_info"
-        app:destination="@id/navigation_stock_info"
-        app:popUpTo="@id/navigation_home"
-        app:popUpToInclusive="true" />
-
-    <action
-        android:id="@+id/explore_stocks_to_stock_info"
-        app:destination="@id/navigation_stock_info"
-        app:popUpTo="@id/navigation_explore_stocks"
-        app:popUpToInclusive="true" />
 </navigation>

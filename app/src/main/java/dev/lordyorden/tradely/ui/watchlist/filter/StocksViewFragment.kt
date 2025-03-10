@@ -14,6 +14,7 @@ import dev.lordyorden.tradely.adapter.StockAdapter
 import dev.lordyorden.tradely.databinding.FragmentStocksViewBinding
 import dev.lordyorden.tradely.interfaces.stock.StockCallback
 import dev.lordyorden.tradely.models.Stock
+import dev.lordyorden.tradely.ui.home.profile_card.ProfileViewModel
 import dev.lordyorden.tradely.ui.stock_info.host.StockViewModel
 
 
@@ -22,6 +23,7 @@ abstract class StocksViewFragment() : Fragment() {
     protected lateinit var binding: FragmentStocksViewBinding
     private lateinit var adapter: StockAdapter
     private val stockVM: StockViewModel by activityViewModels()
+    private val profileSelector: ProfileViewModel by activityViewModels()
 
     abstract fun getViewMode(): FilterStocksViewModel
 
@@ -43,6 +45,10 @@ abstract class StocksViewFragment() : Fragment() {
                 adapter.stocks = stocks
                 adapter.notifyDataSetChanged()
             }
+        }
+
+        profileSelector.selectedProfile.observe(viewLifecycleOwner) {
+            getViewMode().onProfileChanged(it)
         }
 
         adapter.stockCallback  = object : StockCallback {

@@ -24,7 +24,7 @@ class LeaderboardViewModel : ViewModel() {
     }
 
     fun setProfiles(profiles: List<Profile>) {
-        _profiles.value = filterProfilesById(profileManager.myProfile.id, profiles).sortedBy { it.netWorth }.reversed()
+        _profiles.value = profiles.sortedByDescending { it.netWorth }
     }
 
     private fun filterProfilesById(id: String, profiles: List<Profile>): List<Profile> {

@@ -14,6 +14,7 @@ class MyStockViewModel: ViewModel(), FilterStocksViewModel {
 
     private val stockManager = StockManager.getInstance()
     //private val profileManager = ProfileManager.getInstance()
+    private var selectedProfile = ProfileManager.getInstance().myProfile
 
     private val _stocks = MutableLiveData<List<Stock>>(listOf())
     val stocks: LiveData<List<Stock>>
@@ -25,8 +26,6 @@ class MyStockViewModel: ViewModel(), FilterStocksViewModel {
                 useFilter()
             }
         })
-
-        //todo add myProfile observer
     }
 
     fun useFilter(profile: Profile = ProfileManager.getInstance().myProfile) {
@@ -48,5 +47,10 @@ class MyStockViewModel: ViewModel(), FilterStocksViewModel {
 
     override fun getStocksLive(): LiveData<List<Stock>> {
         return stocks
+    }
+
+    override fun onProfileChanged(profile: Profile) {
+        selectedProfile = profile
+        useFilter(profile)
     }
 }

@@ -13,8 +13,7 @@ import dev.lordyorden.tradely.ui.watchlist.filter.FilterStocksViewModel
 
 class WatchlistViewModel: ViewModel(), FilterStocksViewModel {
     private val stockManager = StockManager.getInstance()
-    //private val profileManager = ProfileManager.getInstance()
-
+    private var selectedProfile = ProfileManager.getInstance().myProfile
     private val _stocks = MutableLiveData<List<Stock>>(listOf())
     val stocks: LiveData<List<Stock>>
         get() = _stocks
@@ -25,13 +24,11 @@ class WatchlistViewModel: ViewModel(), FilterStocksViewModel {
                 useFilter()
             }
         })
+    }
 
-        //todo add myProfile observer
-//        profileManager.registerObserver(object : ProfileDataChange {
-//            override fun onDataChange(profile: Profile) {
-//                useFilter(profile)
-//            }
-//        })
+    override fun onProfileChanged(profile: Profile) {
+        selectedProfile = profile
+        useFilter(profile)
     }
 
     private fun getFilter(): ProfileStockFilter {
@@ -42,7 +39,7 @@ class WatchlistViewModel: ViewModel(), FilterStocksViewModel {
         }
     }
 
-    fun useFilter(profile: Profile = ProfileManager.getInstance().myProfile) {
+    fun useFilter(profile: Profile = selectedProfile) {
         setStocks(stockManager.stocks, getFilter().filterStocks(profile)) //?: Log.e("FilterStocksViewModel", "Filter not set")
     }
 

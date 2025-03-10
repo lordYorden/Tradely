@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import dev.lordyorden.tradely.R
 import dev.lordyorden.tradely.adapter.ItemLoadingHelper
 import dev.lordyorden.tradely.databinding.FragmentProfileCardBinding
 import dev.lordyorden.tradely.models.Profile
+import dev.lordyorden.tradely.models.ProfileManager
 import dev.lordyorden.tradely.utilities.ImageLoader
 import java.util.Locale
 
@@ -21,9 +23,7 @@ class ProfileCardFragment : Fragment() {
     private lateinit var binding: FragmentProfileCardBinding
     private val profileSelector: ProfileViewModel by activityViewModels()
 
-    private var profile = Profile.Builder()
-        .name("No data Yet...")
-        .build()
+    private var profile = ProfileManager.getInstance().myProfile
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +56,13 @@ class ProfileCardFragment : Fragment() {
 
         with(currProfile){
             binding.profileLBLName.text = name
-            binding.profileLBLDescription.text = description
+
+            if (description.isNotEmpty()) {
+                binding.profileLBLDescription.text = description
+            } else {
+                binding.profileLBLDescription.text = getString(R.string.no_description)
+            }
+
             binding.profileLBLNetWorth.text = buildString {
                 append("Net Worth: ")
                 append(ItemLoadingHelper.formatBigNumberToString(netWorth))
