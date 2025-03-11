@@ -151,9 +151,9 @@
                 android:valueFrom="1"
                 android:valueTo="100"
                 app:labelBehavior="floating"
-                app:tickColorActive="@color/teal_200"
+                app:tickColorActive="@color/blue"
                 app:tickColorInactive="@color/text_color"
-                app:trackColorActive="@color/teal_200"
+                app:trackColorActive="@color/blue"
                 app:trackColorInactive="@color/text_color"
                 tools:value="50" />
 
@@ -177,11 +177,10 @@
                     android:id="@+id/buy_LBL_num_shares"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_alignParentEnd="true"
                     android:layout_gravity=""
                     android:layout_marginEnd="16dp"
-                    android:text="@string/missing_data"
+                    android:text="@string/zero"
                     android:textColor="@color/text_color"
                     android:textSize="20sp" />
             </RelativeLayout>
@@ -221,7 +220,8 @@
                 android:layout_below="@id/buy_RL_total"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="16dp"
-                android:backgroundTint="@color/teal_200"
+                android:backgroundTint="@color/blue"
+                android:textColor="@color/text_color"
                 android:text="@string/missing_data"
                 tools:text="Pay 136$"
                 android:textAllCaps="false" />

@@ -130,6 +130,8 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                app:rippleColor="@color/blue"
                 android:text="@string/max" />
 
             <com.google.android.material.button.MaterialButton
@@ -137,7 +139,8 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:rippleColor="@color/text_color"
+                android:textColor="@color/text_color"
+                app:rippleColor="@color/blue"
                 android:text="@string/year" />
 
             <com.google.android.material.button.MaterialButton
@@ -145,6 +148,8 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                app:rippleColor="@color/blue"
                 android:text="@string/month" />
 
             <com.google.android.material.button.MaterialButton
@@ -152,6 +157,8 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                app:rippleColor="@color/blue"
                 android:text="@string/day" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -162,7 +169,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/info_TBG_scale"
             android:layout_centerHorizontal="true"
-            android:backgroundTint="@color/teal_200"
+            android:backgroundTint="@color/blue"
+            android:textColor="@color/text_color"
             android:text="@string/buy"/>
 
     </RelativeLayout>

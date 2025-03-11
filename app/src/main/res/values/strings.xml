@@ -29,4 +29,5 @@
     <string name="my_stocks">My Stocks</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse lacus massa, eleifend et nisl ut, interdum commodo justo. Mauris congue efficitur sem vitae ultricies. Fusce dictum eget orci quis tincidunt. Aliquam laoreet rhoncus</string>
     <string name="no_description">No description</string>
+    <string name="zero">0</string>
 </resources>

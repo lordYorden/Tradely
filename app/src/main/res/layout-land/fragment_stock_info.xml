@@ -132,6 +132,8 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                app:rippleColor="@color/blue"
                 android:text="@string/max" />
 
             <com.google.android.material.button.MaterialButton
@@ -140,13 +142,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/year"
-                app:rippleColor="@color/text_color" />
+                android:textColor="@color/text_color"
+                app:rippleColor="@color/blue" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/info_BTN_month"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                app:rippleColor="@color/blue"
                 android:text="@string/month" />
 
             <com.google.android.material.button.MaterialButton
@@ -154,6 +159,8 @@
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                app:rippleColor="@color/blue"
                 android:text="@string/day" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
@@ -165,7 +172,8 @@
             android:layout_marginStart="15dp"
             android:layout_toEndOf="@id/info_TBG_scale"
             android:layout_centerHorizontal="true"
-            android:backgroundTint="@color/teal_200"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/blue"
             android:text="@string/buy" />
 
     </RelativeLayout>

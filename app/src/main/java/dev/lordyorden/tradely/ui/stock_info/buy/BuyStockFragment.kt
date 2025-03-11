@@ -32,6 +32,8 @@ class BuyStockFragment : Fragment() {
         binding = FragmentBuyStockBinding.inflate(layoutInflater)
 
         stockViewModel.selectedStock.observe(viewLifecycleOwner) { stock ->
+            ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.buyLBLTotalPrice, 0.0, stock.currency, "")
+            ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.buyBTNPay, 0.0, stock.currency, "Buy ")
             viewModel.setStockInfo(stock)
         }
 
