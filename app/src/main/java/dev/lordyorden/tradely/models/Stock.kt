@@ -6,9 +6,9 @@ data class Stock private constructor(
     val profilePic: String,
     var symbol: String,
     var pricePerShare: Double,
-    var volume: Int,
+    var volume: Long,
     var change: Double,
-    var marketCap: Int,
+    var marketCap: Long,
     var region: String,
     var currency: String,
     var description: String,
@@ -36,9 +36,9 @@ data class Stock private constructor(
     class Builder {
         private var symbol: String = ""
         private var pricePerShare: Double = 0.0
-        private var volume: Int = 0
+        private var volume: Long = 0
         private var change: Double = 0.0
-        private var marketCap: Int = 0
+        private var marketCap: Long = 0
         private var region: String = ""
         private var currency: String = ""
         private var profilePic: String = ""
@@ -50,9 +50,9 @@ data class Stock private constructor(
 
         fun symbol(symbol: String) = apply { this.symbol = symbol }
         fun pricePerShare(pricePerShare: Double) = apply { this.pricePerShare = pricePerShare }
-        fun volume(volume: Int) = apply { this.volume = volume }
+        fun volume(volume: Long) = apply { this.volume = volume }
         fun change(change: Double) = apply { this.change = change }
-        fun marketCap(marketCap: Int) = apply { this.marketCap = marketCap }
+        fun marketCap(marketCap: Long) = apply { this.marketCap = marketCap }
         fun region(region: String) = apply { this.region = region }
         fun currency(currency: String) = apply { this.currency = currency }
         fun profilePic(profilePic: String) = apply { this.profilePic = profilePic }

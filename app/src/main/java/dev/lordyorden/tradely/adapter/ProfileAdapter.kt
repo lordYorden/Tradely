@@ -84,6 +84,12 @@ class ProfileAdapter(
                     append("$")
                 }
 
+                if (description.isNotEmpty()) {
+                    binding.profileLBLDescription.text = description
+                } else {
+                    binding.profileLBLDescription.text = binding.root.resources.getString(R.string.no_description)
+                }
+
                 binding.profileLBLChange.text = buildString {
                     append(change)
                     append("%")

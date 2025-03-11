@@ -395,7 +395,7 @@ class StockManager private constructor(private val db: StockDB) {
                 val res = prices.asJsonObject.get(currDate).asJsonObject
                 val open = res.get("1. open").asDouble
                 val close = res.get("4. close").asDouble
-                val volume = res.get("5. volume").asInt
+                val volume = res.get("5. volume").asLong
 
 
                 val change = if (open != 0.0) close / open else 0.0
@@ -404,7 +404,7 @@ class StockManager private constructor(private val db: StockDB) {
                 stock.volume = volume
                 stock.pricePerShare = close
                 stock.change = change
-                stock.marketCap = marketCap.toInt()
+                stock.marketCap = marketCap.toLong()
             }
         } catch (e: IllegalStateException) {
             return null
