@@ -54,9 +54,18 @@ Tardely is a stock market simulator built using `Kotlin 2.1.0`, designed for And
 ![Stock Details](./docs/stock_details.png)
 
 - Uses `StockViewModel` to display the details of the chosen stock.
-- **Buy/Sell** - Uses `ProfileManger` to buy/sell stocks.
+- **Buy/Sell** - Navigate to buy/sell fragment.
 - **Add to Watchlist** - Uses `ProfileManger` to add/remove stocks from the watchlist.
 - **Interactive Chart** - Uses `MPAndroidChart` to display the stock's price history in the form of a `candlestick chart`.
+
+
+### 5. Buy/Sell
+| ![Buy](./docs/buy.png) | ![Sell](./docs/sell.png) |
+|------------------------|--------------------------|
+
+- Uses `StockViewModel` to display the details of the chosen stock.
+- **Buy/Sell** - Uses `ProfileManager` to buy/sell stocks.
+- **stop loss** - (Coming Soon) Uses `ProfileManager` to set a stop loss for the stock.
 
 ## Authors
 
