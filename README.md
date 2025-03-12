@@ -13,6 +13,19 @@ Final Project of Afeka's `Mobile Apps - 25A10357` Class.
   STOCK_API_KEY=<Your Token>
   ```
 
+## Table of Contents
+
+- [Overview](#overview)
+- [App Flow](#app-flow)
+  - [Home Screen (Profile)](#1-home-screen-profile)
+  - [Leaderboard](#3-leaderboard)
+  - [Explore Stocks](#4-explore-stocks)
+    - [Stock Details](#4-stock-details)
+    - [Buy/Sell](#5-buysell)
+- [Features who didn't make the cut (Planned in the Features)](#features-who-didnt-make-the-cut-planned-in-the-features)
+- [Technical Details](#technical-details)
+
+
 # Overview
 
 Tardely is a stock market simulator built using `Kotlin 2.1.0`, designed for Android devices.
@@ -66,6 +79,20 @@ Tardely is a stock market simulator built using `Kotlin 2.1.0`, designed for And
 - Uses `StockViewModel` to display the details of the chosen stock.
 - **Buy/Sell** - Uses `ProfileManager` to buy/sell stocks.
 - **stop loss** - (Coming Soon) Uses `ProfileManager` to set a stop loss for the stock.
+
+# Features who didn't make the cut (Planned in the Features)
+- **Stop Loss** - A feature that lets you set a stop loss for a stock.
+- **Follow Feed** - A feature that lets you see the updates of the profiles you follow.
+- **Market Education** - A Page that lets you learn about the stock market and terms.
+- **Realtime-Market Data** - A service that update the RealtimeDB with the current changes in the stock market.
+
+# Technical Details
+- **Data Parsing** - Using price data from Alphavantage API. the `StockParser` serializes the dates into floats and puts them `CandleEntry` objects. 
+- **Deserializing Dates** - The `DateAxisFormater` and `DateTimeAxisFormater` gets the floats and converts them back to dates, to be displayed in the chart.
+- **Profile Manager** - Manages the user's profile data and updates it in and from the `Firebase Firestore`.
+- **Stock Manager** - Manages the stock data and updates it in and from the `Firebase RealtimeDB`.
+- **StockViewModel** - Used to select the current stock and transfer updates and data on it.
+- **ProfileViewModel** - Used to select the current profile and transfer updates and data on it.
 
 ## Authors
 
