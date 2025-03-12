@@ -39,6 +39,7 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
     }
 
     fun addListener(){
+        profiles.clear()
         db.addListener(object : ProfileChangesCallback{
             override fun onProfileChanged(profile: Profile) {
                 if (profiles.isNotEmpty()){
@@ -97,7 +98,7 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
         db.getProfile(id, object : ProfileFetchCallback {
             override fun onProfileFetch(profile: Profile) {
                 myProfile = profile
-                notifyObservers()
+                //notifyObservers()
                 Log.d("Profile loaded", "profile was loaded from db for $id")
             }
 
@@ -106,7 +107,7 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
                     override fun onUpdateSuccess(id: String) {
                         Log.d("New Profile", "Profile created for $id")
                         myProfile = profile
-                        notifyObservers()
+                        //notifyObservers()
                     }
 
                     override fun onUpdateFailed(id: String) {
@@ -124,6 +125,10 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
         myProfile.bought[symbol] = currAmount + amount
         updateProfile(myProfile)
         notifyObservers()
+    }
+
+    fun getAmountOwned(symbol: String): Double{
+        return myProfile.bought.getOrDefault(symbol, 0.0)
     }
 
     fun toggleFollow(id: String) {
@@ -286,6 +291,19 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
             myProfile.watchlist.remove(symbol)
         } else {
             myProfile.watchlist.add(symbol)
+        }
+
+        updateProfile(myProfile)
+        notifyObservers()
+    }
+
+    fun sellStock(symbol: String, numToSell: Double) {
+        val currAmount = myProfile.bought.getOrDefault(symbol, 0.0)
+
+        if (numToSell >= currAmount){
+            myProfile.bought.remove(symbol)
+        }else{
+            myProfile.bought[symbol] = (currAmount - numToSell).coerceAtLeast(1.0)
         }
 
         updateProfile(myProfile)

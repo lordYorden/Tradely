@@ -48,6 +48,7 @@ class StockManager private constructor(private val db: StockDB) {
     }
 
     fun registerStocks() {
+        stocks.clear()
         db.registerStocks(object : StockChangesCallback {
             override fun onStockChanged(stock: Stock) {
                 if (stocks.isNotEmpty()) {
