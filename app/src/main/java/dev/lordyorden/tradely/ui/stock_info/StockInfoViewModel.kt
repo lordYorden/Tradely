@@ -29,20 +29,4 @@ class StockInfoViewModel : ViewModel() {
         hourly.clear()
         hourly.addAll(stock.hourly)
     }
-
-//    fun getEntriesHourly() : List<CandleEntry>{
-//        return StockParser.parseHourlyData(TestDataProvider.getHourlyData())?.toMutableList() ?: mutableListOf()
-//    }
-
-//    fun getEntriesMonthly(): List<CandleEntry>{
-//        return StockParser.parseMonthlyData(TestDataProvider.getMonthlyData())?.toMutableList() ?: mutableListOf()
-//    }
-//
-//    fun getEntriesWeekly(): List<CandleEntry>{
-//        return StockParser.parseWeeklyData(TestDataProvider.getWeeklyData())?.toMutableList() ?: mutableListOf()
-//    }
-//
-//    fun getEntriesDaily(): List<CandleEntry>{
-//        return StockParser.parseDailyData(TestDataProvider.getDailyData())?.toMutableList() ?: mutableListOf()
-//    }
 }

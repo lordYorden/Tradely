@@ -22,10 +22,6 @@ class BuyStockFragment : Fragment() {
     private val isBuy: Boolean
         get() = oldAmountOfShares <= amountOfShares
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

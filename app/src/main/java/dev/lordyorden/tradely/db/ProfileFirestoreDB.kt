@@ -47,41 +47,25 @@ class ProfileFirestoreDB : ProfileDB {
                 buildProfile(result.id, result)?.let {
                     fetchCallback.onProfileFetch(it)
                 } ?: fetchCallback.onProfileFetchFailed()
-                //Log.d("Profile fetched", "Profile: ${result.id}")
-
-//                //val profile: Profile? = result.toObject<Profile>()
-//                if (profile != null){
-//                    profile.id = UUID.fromString(result.id)
-//                    Log.d("Profile fetched", "Profile: ${profile.id}")
-//                    fetchCallback.onProfileFetch(profile)
-//                }
             }
             .addOnFailureListener {
-                //Log.d("Profile fetch failed!", "Error fetching $id")
                 fetchCallback.onProfileFetchFailed()
             }
     }
 
     override fun loadProfiles(fetchCallback: ProfileFetchCallback) {
-        //val list: MutableList<Profile> = mutableListOf()
         val profileCollection = db.collection(Constants.DB.PROFILES_REF)
         profileCollection.get()
             .addOnSuccessListener { result ->
                 for (document in result) {
-//                    val profile = document.toObject<Profile>()
-//                    profile.id = UUID.fromString(document.id)
                     buildProfile(document.id, document)?.let {
                         fetchCallback.onProfileFetch(it)
                     }
-                    //Log.d("Loaded", "${document.id} => ${document.data}")
-
                 }
             }
             .addOnFailureListener { exception ->
-                //Log.d("Error", "Error getting documents.", exception)
                 fetchCallback.onProfileFetchFailed()
             }.addOnCompleteListener {
-                //profiles = list
                 fetchCallback.onFetchComplete()
             }
     }
@@ -90,15 +74,12 @@ class ProfileFirestoreDB : ProfileDB {
         val profilesCollection = db.collection(Constants.DB.PROFILES_REF)
         profiles.forEach { profile ->
             val documentId = profile.id
-            //moviesCollection.add(movie) //also works
             profilesCollection.document(documentId)
                 .set(profile, profileParams)
                 .addOnSuccessListener {
-                    //Log.d("profiles Saved To DB", "Profile: $documentId")
                     updateCallback.onUpdateSuccess(documentId)
                 }
                 .addOnFailureListener {
-                    //Log.d("profiles Save failed!", "Error saving $documentId")
                     updateCallback.onUpdateFailed(documentId)
                 }
         }

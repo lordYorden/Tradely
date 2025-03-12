@@ -19,19 +19,11 @@ import java.util.Locale
 
 class ProfileCardFragment : Fragment() {
 
-//    companion object {
-//        fun newInstance() = ProfileCardFragment()
-//    }
-
     private lateinit var binding: FragmentProfileCardBinding
     private val profileSelector: ProfileViewModel by activityViewModels()
 
     private var profile = ProfileManager.getInstance().myProfile
     private var isToggled = false
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,8 +50,6 @@ class ProfileCardFragment : Fragment() {
                     .name(name.toString())
                     .description(description.toString())
                     .build()
-//                profileChanges.description = description
-//                profileChanges.name = name
                 ProfileManager.getInstance().db.updateProfile(profileChanges, object: ProfileUpdateCallback{
                     override fun onUpdateSuccess(id: String) {
                         profileSelector.selectProfile(profile)

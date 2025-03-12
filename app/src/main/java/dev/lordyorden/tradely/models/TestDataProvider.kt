@@ -2,6 +2,8 @@ package dev.lordyorden.tradely.models
 
 object TestDataProvider {
 
+    //just test data
+
     fun getDailyData(): String{
         return """{
     "Meta Data": {

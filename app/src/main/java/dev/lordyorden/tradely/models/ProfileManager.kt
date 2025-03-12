@@ -29,6 +29,7 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
 
     }
 
+    //in case we need the context for something
     private val contextRef = WeakReference(context)
 
 
@@ -90,7 +91,7 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
 
 
     var myProfile: Profile = Profile.Builder()
-        .id("a0d2bab4-16e3-4d23-93d3-ac144c0b086f")
+        .id("a0d2bab4-16e3-4d23-93d3-ac144c0b086f") //just a random test address
         .build()
 
     fun loadOrCreateProfile(profile: Profile) {
@@ -167,21 +168,7 @@ class ProfileManager private constructor(context: Context, val db: ProfileDB) {
         return profile.followers.find { it == myProfile.id } != null
     }
 
-//    fun loadProfiles(fetchCallback: ProfileFetchCallback) {
-//        db.loadProfiles(fetchCallback)
-//        db.getProfile(myProfile.id, object : ProfileFetchCallback {
-//            override fun onProfileFetch(profile: Profile) {
-//                myProfile = profile
-//                notifyObservers()
-//            }
-//
-//            override fun onProfileFetchFailed() {
-//                Log.d("Profile Fetch", "Error fetching my profile")
-//            }
-//
-//        })
-//    }
-
+    //used for testing
     fun saveProfiles() {
         db.saveProfiles(generateProfileList(), object : ProfileUpdateCallback {
             override fun onUpdateSuccess(id: String) {

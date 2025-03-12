@@ -103,6 +103,7 @@ class StockManager private constructor(private val db: StockDB) {
         }
     }
 
+    //used for testing
     fun uploadTestPrice(){
         StockParser.parseWeeklyData(TestDataProvider.getWeeklyData())
             ?.let { db.updateStockPrices("IBM", it, "weekly") }
@@ -117,6 +118,7 @@ class StockManager private constructor(private val db: StockDB) {
             ?.let { db.updateStockPrices("IBM", it, "hourly") }
     }
 
+    //used for testing
     fun generateStocks(): List<Stock> {
         val stocks = mutableListOf<Stock>()
         stocks.add(
@@ -377,6 +379,7 @@ class StockManager private constructor(private val db: StockDB) {
         })
     }
 
+    //old version of the parser used for deep search
     fun parseAndAddPrice(stock: Stock, json: String): Stock? {
         try {
             val obj = JsonParser.parseString(json).asJsonObject

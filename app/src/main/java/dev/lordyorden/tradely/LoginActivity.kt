@@ -48,28 +48,15 @@ class LoginActivity : AppCompatActivity() {
         signInLauncher.launch(signInIntent)
     }
 
-    private fun signOut(){
-        AuthUI.getInstance()
-            .signOut(this)
-            .addOnCompleteListener {
-                // ...
-            }
-    }
-
 
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         //val response = result.idpResponse
         if (result.resultCode == RESULT_OK) {
             // Successfully signed in
-            //val user = FirebaseAuth.getInstance().currentUser
             transactToNextScreen()
         } else {
             Toast.makeText(this, "Error: failed logging in.", Toast.LENGTH_LONG).show()
             signIn()
-            // Sign in failed. If response is null the user canceled the
-            // sign-in flow using the back button. Otherwise check
-            // response.getError().getErrorCode() and handle the error.
-            // ...
         }
     }
 

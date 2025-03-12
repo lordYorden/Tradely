@@ -39,7 +39,6 @@ abstract class StocksViewFragment() : Fragment() {
 
         adapter = StockAdapter()
         adapter.hasExtraOption = false
-//        adapter.stocks = StockManager.getInstance().generateStocks()
         binding.stocksRVStocks.adapter = adapter
         binding.stocksRVStocks.layoutManager = LinearLayoutManager(context)
 
@@ -66,7 +65,6 @@ abstract class StocksViewFragment() : Fragment() {
             }
 
             override fun onStockClicked(stock: Stock, position: Int) {
-                //Toast.makeText(context, "stock click", Toast.LENGTH_SHORT).show()
                 stockVM.selectStock(stock)
                 val navController = findNavController()
                 navController.navigate(R.id.action_home_to_stock_info)
