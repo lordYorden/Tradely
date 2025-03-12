@@ -4,14 +4,21 @@ Final Project of Afeka's `Mobile Apps - 25A10357` Class.
 
 ## How to Run
 
-> To use this app (with it's full feature set), you'll need a alphavantage api.
-> If you don't have one, you can still run the app without it. just create a fake file instead.
+1. Create `local.env`:
+  > To use this app (with it's full feature set), you'll need a alphavantage api.
+  > If you don't have one, you can still run the app without it. just create a fake file instead.
+  
+  - Save your `token` in the project root directory under `local.env`:
+  
+    ```properties
+    STOCK_API_KEY=<Your Token>
+    ```
 
-- Save your `token` in the project root directory under `local.env`:
-
-  ```properties
-  STOCK_API_KEY=<Your Token>
-  ```
+2. Create a `Firebase` project and add the `google-services.json` to the `app` directory.
+The Firebase project must have the following enabled:
+   - Authentication (Google/Email/Phone) - needs to configure [`sha1 fingerprint`](https://developers.google.com/android/guides/client-auth)
+   - Firestore 
+   - Realtime Database
 
 ## Table of Contents
 
@@ -41,6 +48,7 @@ Tardely is a stock market simulator built using `Kotlin 2.1.0`, designed for And
 
 - **Profile Card** - displays the profile info and lets you edit your own profile 
 - **Watchlist & Owned Stocks** - Uses a viewpager to display the user's `watchlist` and `owned stocks` updates using `ProfileViewModel`
+- **View Pager & Adapter** - Uses `WatchlistNavigationAdapter` to display the `watchlist` and `owned stocks` in a `ViewPager`.
 
 ### 3. Leaderboard
 
