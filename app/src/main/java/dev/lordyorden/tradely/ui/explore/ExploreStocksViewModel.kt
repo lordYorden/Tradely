@@ -26,7 +26,7 @@ class ExploreStocksViewModel : ViewModel(){
     }
 
     fun setStocks(stocks: List<Stock>) {
-        _stocks.postValue(stocks.sortedBy { it.symbol }.reversed())
+        _stocks.postValue(stocks.sortedBy { it.marketCap }.reversed())
     }
 
     fun searchStocks(symbol: String){
