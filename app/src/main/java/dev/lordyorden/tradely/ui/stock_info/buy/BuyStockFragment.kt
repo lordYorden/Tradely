@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import com.google.android.material.slider.RangeSlider
 import dev.lordyorden.tradely.adapter.ItemLoadingHelper
 import dev.lordyorden.tradely.databinding.FragmentBuyStockBinding
 import dev.lordyorden.tradely.models.ProfileManager
@@ -19,6 +18,9 @@ class BuyStockFragment : Fragment() {
     private val stockViewModel: StockViewModel by activityViewModels()
     private lateinit var binding: FragmentBuyStockBinding
     private var amountOfShares: Float = 0.0f
+    private var oldAmountOfShares: Float = 0.0f
+    private val isBuy: Boolean
+        get() = oldAmountOfShares <= amountOfShares
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,34 +45,44 @@ class BuyStockFragment : Fragment() {
     }
 
     private fun initViews() {
-        binding.buySLDAmount.addOnChangeListener(RangeSlider.OnChangeListener { _, value, _ ->
+        binding.buySLDAmount.addOnChangeListener{ _, value, _ ->
             binding.buyLBLNumShares.text = buildString { append(value) }
             calcPriceAndDisplay(value)
-        })
+        }
 
         binding.buyBTNPay.setOnClickListener{
-            if(amountOfShares == 0.0f || viewModel.currentStock == null)
+            if(viewModel.currentStock == null)
                 return@setOnClickListener
 
             val stock = viewModel.currentStock!!
-            ProfileManager.getInstance().buyStock(stock.symbol, amountOfShares.toDouble())
+
+            if (isBuy)
+                ProfileManager.getInstance().buyStock(stock.symbol, (amountOfShares - oldAmountOfShares).toDouble())
+            else
+                ProfileManager.getInstance().sellStock(stock.symbol, (oldAmountOfShares - amountOfShares).toDouble())
         }
     }
 
-    private fun calcPriceAndDisplay(amountOfShares: Float) {
-        viewModel.currentStock ?: return
+    private fun calcPriceAndDisplay(amountOfShares: Float): Boolean {
+        viewModel.currentStock ?: return false
         val stock = viewModel.currentStock!!
 
         this.amountOfShares = amountOfShares
-        val price = stock.pricePerShare * amountOfShares
-        ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.buyLBLTotalPrice, price, stock.currency, "")
-        ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.buyBTNPay, price, stock.currency, "Buy ")
 
+
+        val label = if(isBuy) "Buy " else "Sell "
+        val diff = if(isBuy) {amountOfShares - oldAmountOfShares} else {oldAmountOfShares - amountOfShares}
+        val price = stock.pricePerShare * diff
+
+        ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.buyLBLTotalPrice, price, stock.currency, "")
+        ItemLoadingHelper.updatePriceWithRegionalCurrency(binding.buyBTNPay, price, stock.currency, label)
+        return isBuy
     }
 
     override fun onResume() {
         super.onResume()
         displayStock()
+
     }
 
     private fun displayStock() {
@@ -86,5 +98,10 @@ class BuyStockFragment : Fragment() {
             binding.buyIMGStock,
             binding.buyIMGFlag
         )
+
+        viewModel.currentStock?.let {
+            oldAmountOfShares = ProfileManager.getInstance().getAmountOwned(it.symbol).toFloat()
+            binding.buySLDAmount.value = oldAmountOfShares
+        }
     }
 }

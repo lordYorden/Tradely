@@ -171,7 +171,7 @@
             android:layout_centerHorizontal="true"
             android:backgroundTint="@color/blue"
             android:textColor="@color/text_color"
-            android:text="@string/buy"/>
+            android:text="@string/trade"/>
 
     </RelativeLayout>
 
