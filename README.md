@@ -46,7 +46,7 @@ Tardely is a stock market simulator built using `Kotlin 2.1.0`, designed for And
 - Updates the stock list using `StockViewModel` and `StockManager` with read-time data from `Firebase Realtime` using the Observer pattern.
 - Clicking on a stock will navigate to the stock details.
 - **Search** - Uses `SearchView` to filter the stocks by name.
-- **Deep Search** - When no stock is found in the search, the app will try to find the stock in the `AlphaVantage API` and add it to the list. (Photo to the right).
+- **Deep Search** - When no stock is found in the search, the app will try to find the stock in the `AlphaVantage API Key` and add it to the list. (Photo to the right).
 - **Watchlist** - Adds the stock to the profile's watchlist using `ProfileManager`.
 
 ### 4. Stock Details
