@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
     private fun signIn() {
         val providers = arrayListOf(
             AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.PhoneBuilder().build(),
+            //AuthUI.IdpConfig.PhoneBuilder().build(),
             AuthUI.IdpConfig.GoogleBuilder().build(),
         )
 
@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
         val signInIntent = AuthUI.getInstance()
             .createSignInIntentBuilder()
             .setAvailableProviders(providers)
-            .setLogo(R.drawable.ic_stock_explore)
+            .setLogo(R.drawable.tradely_full_alt)
             .build()
         signInLauncher.launch(signInIntent)
     }
